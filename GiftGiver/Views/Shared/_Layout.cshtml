@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DiamondStore </title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/45c3cf2169.js" crossorigin="anonymous"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+    <div class="body1">
+    <div class="box">
+        <span style="--i:1;"><img src="~/img/image1.jpg" alt=""></span>
+        <span style="--i:2;"><img src="~/img/image2.jpg" alt=""></span>
+        <span style="--i:3;"><img src="~/img/image3.jpg" alt=""></span>
+        <span style="--i:4;"><img src="~/img/image4.jpg" alt=""></span>
+        <span style="--i:5;"><img src="~/img/image5.jpg" alt=""></span>
+        <span style="--i:6;"><img src="~/img/image6.jpg" alt=""></span>
+        <span style="--i:7;"><img src="~/img/image7.jpg" alt=""></span>
+        <span style="--i:8;"><img src="~/img/image8.jpg" alt=""></span>
+    </div>
+    </div>
+    <div class="body2">
+    @RenderBody()
+    </div>
+    <script type="text/javascript">
+        let box = document.querySelector('.box');
+        window.onmousemove = function (e) {
+            let x = e.clientX / 3;
+            box.style.transform = "perspective(1000px) rotateY(" + x + "deg)";
+        }
+    </script>
+</body>
+</html>
