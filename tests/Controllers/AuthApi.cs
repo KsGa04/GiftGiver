@@ -19,7 +19,7 @@ namespace tests.Controllers
         }
 
         [HttpPost]
-        [Route("/getauth/{loginOrEmail}/{password}")]
+        [Route("postauth")]
         public SuccessResponse GetAuth(string loginOrEmail, string password)
         {
             CurrentUser.CurrentClientId = (from c in db.Users where (c.Email == loginOrEmail || c.Email == loginOrEmail) && c.Password == password select c.UserId).FirstOrDefault();

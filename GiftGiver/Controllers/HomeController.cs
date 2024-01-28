@@ -1,10 +1,7 @@
 ﻿using GiftGiver.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Security.Claims;
 using tests.Controllers;
 
 namespace GiftGiver.Controllers
@@ -13,6 +10,8 @@ namespace GiftGiver.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AuthApi _apiController;
+        private readonly RegApi _regApi;
+
 
         public HomeController(ILogger<HomeController> logger, AuthApi apiController)
         {
@@ -40,8 +39,27 @@ namespace GiftGiver.Controllers
                 return View();
             }
         }
+        public IActionResult Registration()
+        {
+            return View();
+        }
 
-            [AllowAnonymous]
+        [HttpPost]
+        public IActionResult Registration(string login, string email, string password)
+        {
+            var result = _regApi.Registration(login, email, password);
+            if (result.Success == true)
+            {
+                return RedirectToAction("Authorization", "Home");
+            }
+            else
+            {
+                ViewBag.Enter = result.Message;
+                return View();
+            }
+        }
+
+        [AllowAnonymous]
             public IActionResult Privacy()
         {
             return View();

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DiamondStore </title>
+    <title>@ViewData["Title"] - Gift/Giver </title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/45c3cf2169.js" crossorigin="anonymous"></script>
@@ -11,27 +11,31 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
-    <div class="body1">
-    <div class="box">
-        <span style="--i:1;"><img src="~/img/image1.jpg" alt=""></span>
-        <span style="--i:2;"><img src="~/img/image2.jpg" alt=""></span>
-        <span style="--i:3;"><img src="~/img/image3.jpg" alt=""></span>
-        <span style="--i:4;"><img src="~/img/image4.jpg" alt=""></span>
-        <span style="--i:5;"><img src="~/img/image5.jpg" alt=""></span>
-        <span style="--i:6;"><img src="~/img/image6.jpg" alt=""></span>
-        <span style="--i:7;"><img src="~/img/image7.jpg" alt=""></span>
-        <span style="--i:8;"><img src="~/img/image8.jpg" alt=""></span>
-    </div>
-    </div>
-    <div class="body2">
+    <header>
+        <div>
+            <div class="v133_719"></div>
+            <span class="lenta">Лента подарков</span>
+            <span class="giftgiver">Gift/Giver</span>
+            <span class="poxoshie">Похожие подарки</span>
+            <div class="v133_723">
+                <div class="v133_724">
+                    <span class="cabinet">Личный кабинет</span>
+                </div>
+                <div class="v133_726"></div>
+            </div>
+            <div class="v133_728">
+                <div class="v133_729">
+                    <span class="chat">Чат-бот</span>
+                </div>
+                <div class="v133_731" />
+            </div>
+        </div>
+    </header>
+    <main class="fon">
     @RenderBody()
-    </div>
-    <script type="text/javascript">
-        let box = document.querySelector('.box');
-        window.onmousemove = function (e) {
-            let x = e.clientX / 3;
-            box.style.transform = "perspective(1000px) rotateY(" + x + "deg)";
-        }
-    </script>
+    </main>
+    <footer>
+        <div></div>
+    </footer>
 </body>
 </html>

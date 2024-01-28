@@ -5,25 +5,28 @@
 
 <section>
         <form asp-action="Authorization" method="post">
-            <h1>Login</h1>
-            <div class="inputbox">
-                <ion-icon name="mail-outline"></ion-icon>
-            <input type="email" name="loginOrEmail" required>
-                <label for="">Email</label>
+        <div class="v133_700">
+            <div><span class="autho">Авторизация</span></div>
+            <div style="margin-left:3%">
+            <span class="v133_703">Логин</span>
+            <div class="v133_704">
+               <input class="v133_705" type="text" value="Логин" name="loginOrEmail" />
             </div>
-            <div class="inputbox">
-                <ion-icon name="lock-closed-outline"></ion-icon>
-            <input type="password" name="password" required>
-                <label for="">Password</label>
             </div>
-        <p style="color:red; font-size: 12px; margin:auto">@ViewBag.Enter</p>
-            <div class="forget">
-                <label for=""><input type="checkbox">Remember Me</label>
-                <a href="#">Forget Password</a>
+            <div style="margin-left:3%">
+                <span class="v133_708">Пароль</span>
+                <div class="v133_709">
+                    <input class="v133_710" type="password" value="*********" name="password">
+                </div>
             </div>
-        <button type="submit">Log in</button>
-            <div class="register">
-                <p>Don't have a account <a href="#">Register</a></p>
+            <div>
+                <p style="color:red; font-size: 12px; margin-left: 15%; top:5%; position:relative">@ViewBag.Enter</p>
+                <button class="v133_713" type="submit">Войти</button>
             </div>
+            <div>
+                <span class="v133_715">Восстановить пароль</span>
+                <a asp-action="Registration" class="v133_716">Регистрация</a>
+            </div>
+        </div>
         </form>
 </section>
