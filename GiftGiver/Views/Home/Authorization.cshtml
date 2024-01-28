@@ -5,27 +5,27 @@
 
 <section>
         <form asp-action="Authorization" method="post">
-        <div class="v133_700">
+        <div class="autho_700">
             <div><span class="autho">Авторизация</span></div>
             <div style="margin-left:3%">
-            <span class="v133_703">Логин</span>
-            <div class="v133_704">
-               <input class="v133_705" type="text" value="Логин" name="loginOrEmail" />
+            <span class="autho_703">Логин</span>
+            <div class="autho_704">
+               <input class="autho_705" type="text" value="Логин" name="loginOrEmail" />
             </div>
             </div>
             <div style="margin-left:3%">
-                <span class="v133_708">Пароль</span>
-                <div class="v133_709">
-                    <input class="v133_710" type="password" value="*********" name="password">
+                <span class="autho_708">Пароль</span>
+                <div class="autho_709">
+                    <input class="autho_710" type="password" value="*********" name="password">
                 </div>
             </div>
             <div>
                 <p style="color:red; font-size: 12px; margin-left: 15%; top:5%; position:relative">@ViewBag.Enter</p>
-                <button class="v133_713" type="submit">Войти</button>
+                <button class="autho_713" type="submit">Войти</button>
             </div>
             <div>
-                <span class="v133_715">Восстановить пароль</span>
-                <a asp-action="Registration" class="v133_716">Регистрация</a>
+                <a asp-action="Recovery" class="autho_715">Восстановить пароль</a>
+                <a asp-action="Registration" class="autho_716">Регистрация</a>
             </div>
         </div>
         </form>

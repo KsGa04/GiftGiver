@@ -2,3 +2,42 @@
     Layout = "_Layout";
     ViewData["Title"] = "Регистрация";
 }
+
+<section>
+    <form asp-action="Registration" method="post">
+        <div class="rectangle-10">
+            <div class="text-wrapper">Регистрация</div>
+            <div class="group-5">
+                <div class="text-wrapper-2">ФИО</div>
+                <div class="overlap-group-wrapper">
+                    <input class="overlap-group" type="text" value="ФИО" name="FIO" />
+                </div>
+            </div>
+
+            <div class="group-6">
+            <div class="text-wrapper-2">Логин</div>
+            <div class="overlap-group-wrapper">
+                <input class="overlap-group" type="text" value="Логин" name="login"/>
+            </div>
+        </div>
+
+            <div class="group-7">
+                <p class="text-wrapper-2">Пароль (не меннее 6 символов)</p>
+                <div class="overlap-group-wrapper">
+                    <input class="overlap-group" type="password" value="**********" name="password" />
+                </div>
+            </div>
+
+            <div class="group-8">
+                <div class="text-wrapper-2">E-mail</div>
+                <div class="overlap-group-wrapper">
+                    <input class="overlap-group" type="text" value="E-mail" name="email" />
+                </div>
+            </div>
+            <div class="div-wrapper">
+                <p style="color:red; font-size: 12px; margin-left: 15%; top:3%; position:fixed">@ViewBag.Enter</p>
+                <button class="overlap-2" type="submit">Зарегистрироваться</button>
+            </div>
+        </div>
+    </form>
+</section>

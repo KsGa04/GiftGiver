@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Восстановление пароля";
+}
+
+<section>
+    <form asp-action="Recovery2" method="post">
+        <div class="recover_700">
+            <div><span class="recover">Восстановление <br /> пароля</span></div>
+            <div style="margin-left:3%">
+                <span class="recover_703">Введите код</span>
+                <div class="recover_704">
+                    <input class="recover_705" type="text" value="****" name="code" />
+                </div>
+            </div>
+            <div style="margin-left:3%">
+                <span class="recover_708">Введите пароль</span>
+                <div class="recover_709">
+                    <input class="recover_710" type="password" value="*********" name="password">
+                </div>
+            </div>
+            <div>
+                <p style="color:red; font-size: 12px; margin-left: 15%; top:5%; position:fixed">@ViewBag.Enter</p>
+                <button class="recover_713" type="submit">Подтвердить</button>
+            </div>
+        </div>
+    </form>
+</section>

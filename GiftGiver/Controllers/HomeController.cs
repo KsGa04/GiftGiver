@@ -59,6 +59,16 @@ namespace GiftGiver.Controllers
             }
         }
 
+        public IActionResult Recovery1()
+        {
+            return View();
+        }
+
+        public IActionResult Recovery2()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
             public IActionResult Privacy()
         {
