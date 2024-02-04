@@ -5,6 +5,9 @@ using System.Xml;
 using System;
 using HtmlAgilityPack;
 using tests.Models;
+using CefSharp;
+using CefSharp.OffScreen;
+using Common.Browser;
 
 namespace tests.Controllers
 {
@@ -21,25 +24,58 @@ namespace tests.Controllers
         }
 
         [HttpPost]
-        [Route("postreg")]
-        public ProductResponce AddProduct(string link)
+        [Route("add")]
+        public async void AddProduct()
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(link);
+            var result = await LoadProduct("https://www.wildberries.ru/catalog/21516177/detail.aspx");
+        }
+        protected async Task<JavascriptResponse> ExecuteJavaScript(ChromiumWebBrowser wb1, string s)
+        {
+            try
+            {
+                return await wb1.EvaluateScriptAsync(s);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
 
-            // Получение названия товара
-            HtmlNode titleNode = doc.DocumentNode.SelectSingleNode("//h1[@class='brand-and-name j-product-title']");
-            string title = titleNode.InnerText.Trim();
+        private async Task<(bool Success, string Result)> TryGetStringResult(ChromiumWebBrowser wb1, string script)
+        {
+            var shopIdresponse = await ExecuteJavaScript(wb1, script);
+            if (shopIdresponse.Success && shopIdresponse.Result is string resultString && !string.IsNullOrEmpty(resultString))
+            {
+                return (true, resultString);
+            }
+            else
+            {
+                return (true, null);
+            }
+        }
 
-            // Получение цены товара
-            HtmlNode priceNode = doc.DocumentNode.SelectSingleNode("//span[@class='final-cost']");
-            string price = priceNode.InnerText.Trim();
+        private async Task<(string, string)> LoadProduct(string url)
+        {
+            using (var chromium = new ChromiumWebBrowser(string.Empty))
+            {
+                await Task.Delay(2000);
+                await chromium.LoadUrlAsync(url);
 
-            result = new ProductResponce {
-                Name = title,
-                Cost = price
-            };
-            return result;
+                string productName = string.Empty;
+                string price = string.Empty;
+
+                await chromium.WaitUntill(async browser =>
+                {
+                    var res = await TryGetStringResult(chromium, browser.GetElementByClassName("product-page__title", 0).GetInnerText());
+                    var res2 = await TryGetStringResult(chromium, browser.GetElementByClassName("price-block__final-price", 0).GetInnerText());
+
+                    productName = res.Result?.Trim();
+                    price = res2.Result?.Trim();
+                    return res.Success && res2.Success && res.Result != null && res2.Result != null;
+                });
+
+                return (productName, price);
+            }
         }
     }
 }
