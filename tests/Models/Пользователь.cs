@@ -16,6 +16,7 @@ namespace tests
         public string Пароль { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string? Фио { get; set; }
+        public byte[]? Изображение { get; set; }
         public DateTime? Возраст { get; set; }
         public DateTime? ДатаПосещения { get; set; }
         public int РолиId { get; set; }

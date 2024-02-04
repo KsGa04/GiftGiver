@@ -17,17 +17,25 @@ namespace tests.Controllers
     {
         // GET: HomeController
         private giftgiverContext? db;
-        public ProductResponce result;
+        public ProductResponce gift;
         public AddProductApi(giftgiverContext cookingBook)
         {
             db = cookingBook;
         }
 
         [HttpPost]
-        [Route("add")]
-        public async void AddProduct()
+        [Route("addWBproduct")]
+        public async Task<ProductResponce> AddProduct(string link)
         {
-            var result = await LoadProduct("https://www.wildberries.ru/catalog/21516177/detail.aspx");
+            var result = await LoadProduct(link);
+            gift = new ProductResponce
+            {
+                Name = result.Item1,
+                Cost = result.Item2,
+                Link = link
+            };
+            return gift;
+
         }
         protected async Task<JavascriptResponse> ExecuteJavaScript(ChromiumWebBrowser wb1, string s)
         {

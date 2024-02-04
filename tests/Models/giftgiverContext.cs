@@ -105,6 +105,8 @@ namespace tests
 
                 entity.Property(e => e.Жанр).HasMaxLength(100);
 
+                entity.Property(e => e.Изображение).HasColumnType("image");
+
                 entity.Property(e => e.Наименование).HasMaxLength(100);
 
                 entity.Property(e => e.Цена).HasColumnType("money");
@@ -121,6 +123,8 @@ namespace tests
                 entity.Property(e => e.Возраст).HasColumnType("date");
 
                 entity.Property(e => e.ДатаПосещения).HasColumnType("datetime");
+
+                entity.Property(e => e.Изображение).HasColumnType("image");
 
                 entity.Property(e => e.Логин).HasMaxLength(100);
 

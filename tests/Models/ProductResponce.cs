@@ -3,13 +3,18 @@
     public class ProductResponce
     {
         /// <summary>
-        ///     Результат
+        ///     Наименование товара
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        ///     Сообщение
+        ///     Цена товара
         /// </summary>
         public string Cost { get; set; }
+
+        /// <summary>
+        ///     Ссылка на товар
+        /// </summary>
+        public string Link { get; set; }
     }
 }

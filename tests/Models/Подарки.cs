@@ -12,6 +12,7 @@ namespace tests
         }
 
         public int ПодаркиId { get; set; }
+        public byte[]? Изображение { get; set; }
         public string Наименование { get; set; } = null!;
         public decimal Цена { get; set; }
         public int? МинВозраст { get; set; }
