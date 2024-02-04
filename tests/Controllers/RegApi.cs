@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using GiftGiver.Models;
-
+using tests.Models;
 
 namespace tests.Controllers
 {
@@ -25,7 +25,7 @@ namespace tests.Controllers
         {
             using (giftgiverContext db = new giftgiverContext())
             {
-                int countClients = (from c in db.Users where c.Email == email || c.NikName == login select c).Count();
+                int countClients = (from c in db.Пользовательs where c.Email == email || c.Логин == login select c).Count();
                 if (countClients > 0)
                 {
                     result = new SuccessResponse
@@ -46,7 +46,7 @@ namespace tests.Controllers
                 }
                 else
                 {
-                    db.Add(new User { NikName = login, Email = email, Password = password, RoleId = 1 });
+                    db.Add(new Пользователь { Логин = login, Email = email, Пароль = password, РолиId = 1 });
                     db.SaveChanges();
                     result = new SuccessResponse
                     {

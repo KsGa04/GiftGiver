@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using GiftGiver.Models;
+using tests.Models;
 
 namespace tests.Controllers
 {
@@ -22,8 +23,8 @@ namespace tests.Controllers
         [Route("postauth")]
         public SuccessResponse GetAuth(string loginOrEmail, string password)
         {
-            CurrentUser.CurrentClientId = (from c in db.Users where (c.Email == loginOrEmail || c.Email == loginOrEmail) && c.Password == password select c.UserId).FirstOrDefault();
-            User client = (from c in db.Users where (c.Email == loginOrEmail || c.Email == loginOrEmail) && c.Password == password select c).FirstOrDefault();
+            CurrentUser.CurrentClientId = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Email == loginOrEmail) && c.Пароль == password select c.ПользовательId).FirstOrDefault();
+            Пользователь client = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Email == loginOrEmail) && c.Пароль == password select c).FirstOrDefault();
             if (CurrentUser.CurrentClientId > 0)
             {
                 var claims = new List<Claim> { new Claim(ClaimTypes.Name, "test"),

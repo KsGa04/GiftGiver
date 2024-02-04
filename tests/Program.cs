@@ -1,4 +1,5 @@
 using GiftGiver.Models;
+using tests;
 using tests.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
