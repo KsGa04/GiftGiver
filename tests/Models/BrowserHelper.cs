@@ -16,9 +16,9 @@ namespace Common.Browser
         /// <returns></returns>
         public static async Task WaitUntill(this IChromiumWebBrowserBase browser, Func<IChromiumWebBrowserBase, Task<bool>> func, int delay = 100)
         {
-            while(true)
+            while (true)
             {
-                if(await func.Invoke(browser))
+                if (await func.Invoke(browser))
                 {
                     return;
                 }
@@ -55,6 +55,16 @@ namespace Common.Browser
                     {{
                         var elem = {this.Get()};
                         return elem.innerText;
+                    }})()";
+        }
+
+        public string GetAttribute(string attributeName)
+        {
+            return $@"
+                    (function ()
+                    {{
+                        var elem = {this.Get()};
+                        return elem.getAttribute('{attributeName}');
                     }})()";
         }
     }

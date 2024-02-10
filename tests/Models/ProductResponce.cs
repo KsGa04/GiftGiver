@@ -13,6 +13,11 @@
         public string Cost { get; set; }
 
         /// <summary>
+        ///     Цена товара
+        /// </summary>
+        public string Image { get; set; }
+
+        /// <summary>
         ///     Ссылка на товар
         /// </summary>
         public string Link { get; set; }

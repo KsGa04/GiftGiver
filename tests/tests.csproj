@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="CefSharp.OffScreen.NETCore" Version="120.2.70" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.57" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.5.0" />
+    <PackageReference Include="Magick.NET.Core" Version="13.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.12">
