@@ -19,9 +19,9 @@ namespace tests.Controllers
         {
             try
             {
-                var fromAddress = new MailAddress("yourEmailAddress@gmail.com", "Your Name");
+                var fromAddress = new MailAddress("kseniagaranceva@gmail.com", "Admin");
                 var toAddress = new MailAddress(emailParams.ToEmail, "Recipient Name");
-                const string fromPassword = "yourEmailPassword";
+                const string fromPassword = "Arthur3007!";
                 const string subject = "Verification Code";
                 string body = "Your verification code is: " + emailParams.VerificationCode;
 

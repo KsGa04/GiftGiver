@@ -19,56 +19,45 @@ namespace tests.Controllers
     public class AddProductApi : Controller
     {
         // GET: HomeController
-        private giftgiverContext? db;
+        private giftgiverContext db = new giftgiverContext();
         public ProductResponce gift;
-        public AddProductApi(giftgiverContext cookingBook)
+        public AddProductApi(giftgiverContext giftgiver)
         {
-            db = cookingBook;
+            db = giftgiver;
         }
 
         [HttpPost]
         [Route("addWBproduct")]
-        public async Task<ProductResponce> AddProduct(string link)
+        public async Task<ProductResponce> AddWBProduct(string link)
         {
             var result = await LoadProduct(link);
-            Uri uri = new Uri(link);
-            string[] segments = uri.AbsolutePath.Split('/');
+            string[] segments = link.Split('/');
             string itemId = segments[2];
             decimal cost;
-            decimal цена = 0;
             NumberStyles style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
-
-            // Установка культуры парсинга, чтобы учесть русские настройки форматирования чисел
             CultureInfo culture = new CultureInfo("ru-RU");
 
-            // Парсинг строки в формат decimal
             if (decimal.TryParse(result.Item2, style, culture, out cost))
             {
-                цена = cost;
-                using (giftgiverContext db = new giftgiverContext())
+                Подарки подарки = new Подарки();
+                подарки.Наименование = result.Item1;
+                подарки.Цена = cost;
+                подарки.Ссылка = link;
+                подарки.Изображение = result.Item3;
+                db.Подаркиs.Add(подарки);
+                db.SaveChanges();
+                gift = new ProductResponce
                 {
-                    Подарки подарки = new Подарки();
-                    подарки.ПодаркиId = Convert.ToInt32(itemId);
-                    подарки.Наименование = result.Item1;
-                    подарки.Цена = цена;
-                    подарки.Ссылка = link;
-                    подарки.Изображение = result.Item3;
-                    db.Подаркиs.Add(подарки);
-                    db.SaveChanges();
-                }
+                    Name = result.Item1,
+                    Cost = result.Item2,
+                    Image = result.Item3.ToString(),
+                    Link = link
+                };
             }
             else
             {
                 Console.WriteLine("Невозможно преобразовать строку в формат decimal");
             }
-
-            gift = new ProductResponce
-            {
-                Name = result.Item1,
-                Cost = result.Item2,
-                Image = result.Item3.ToString(),
-                Link = link
-            };
             return gift;
 
         }
@@ -114,10 +103,11 @@ namespace tests.Controllers
                     var res = await TryGetStringResult(chromium, browser.GetElementByClassName("product-page__title", 0).GetInnerText());
                     var res2 = await TryGetStringResult(chromium, browser.GetElementByClassName("price-block__final-price", 0).GetInnerText());
                     var res3 = await TryGetStringResult(chromium, browser.GetElementByClassName("photo-zoom__preview j-zoom-image", 0).GetAttribute("src"));
-
+                    
                     productName = res.Result?.Trim();
                     price = res2.Result?.Trim();
                     photoUrl = res3.Result?.Trim();
+
                     return res.Success && res2.Success && res3.Success
                     && res.Result != null && res2.Result != null && res3.Result != null;
                 });

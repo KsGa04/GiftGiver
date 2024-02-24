@@ -7,25 +7,25 @@ namespace tests.Controllers
     [Route("api/wishlist")]
     public class WishListApi : Controller
     {
-        private giftgiverContext? _db;
+        public giftgiverContext db = new giftgiverContext();
         public WishListApi(giftgiverContext giftgiver)
         {
-            _db = giftgiver;
+            db = giftgiver;
         }
         [HttpGet]
         [Route("/UserWish")]
         public async Task<ActionResult<Желаемое>> Get(int id)
         {
             // Ваш код для получения ресурса по указанному id
-            bool isIdExists = _db.Желаемоеs.Any(r => r.ПользовательId == id);
-            if (isIdExists == false)
+            var WishList = db.Желаемоеs.Where(r => r.ПользовательId == id).FirstOrDefault();
+            if (WishList == null)
             {
                 return NotFound();
             }
             else
             {
 
-                return Ok(_db.Желаемоеs.Where(r => r.ПользовательId == id).FirstOrDefault());
+                return Ok(WishList);
             }
         }
     }

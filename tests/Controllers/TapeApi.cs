@@ -7,25 +7,24 @@ namespace tests.Controllers
     [Route("api/tape")]
     public class TapeApi : Controller
     {
-        private giftgiverContext? _db;
+        public giftgiverContext db = new giftgiverContext();
         public TapeApi(giftgiverContext giftgiver)
         {
-            _db = giftgiver;
+            db = giftgiver;
         }
         [HttpGet]
         [Route("/UserTape")]
         public async Task<ActionResult<Лента>> Get(int id)
         {
-            // Ваш код для получения ресурса по указанному id
-            bool isIdExists = _db.Лентаs.Any(r => r.ПользовательId == id);
-            if (isIdExists == false)
+            var ListTape = db.Лентаs.Where(r => r.ПользовательId == id).FirstOrDefault();
+            if (ListTape == null)
             {
                 return NotFound();
             }
             else
             {
 
-                return Ok(_db.Желаемоеs.Where(r => r.ПользовательId == id).FirstOrDefault());
+                return Ok(ListTape);
             }
         }
     }

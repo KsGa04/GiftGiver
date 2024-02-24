@@ -12,42 +12,42 @@ namespace tests.Controllers
     public class AuthApi : Controller
     {
         // GET: HomeController
-        private giftgiverContext? db;
+        private giftgiverContext db = new giftgiverContext();
         public SuccessResponse result;
-        public AuthApi(giftgiverContext cookingBook)
+        public AuthApi(giftgiverContext giftgiver)
         {
-            db = cookingBook;
+            db = giftgiver;
         }
 
         [HttpPost]
         [Route("postauth")]
-        public SuccessResponse GetAuth(string loginOrEmail, string password)
+        public async Task<ActionResult<SuccessResponse>> GetAuth(string loginOrEmail, string password)
         {
             CurrentUser.CurrentClientId = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password select c.ПользовательId).FirstOrDefault();
             Пользователь client = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password select c).FirstOrDefault();
             if (CurrentUser.CurrentClientId > 0)
             {
                 var claims = new List<Claim> { new Claim(ClaimTypes.Name, "test"),
-                        new Claim(ClaimTypes.Email, "testc@mail.ru")};
+                new Claim(ClaimTypes.Email, "testc@mail.ru")};
                 ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
 
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                result = new SuccessResponse
+                var result = new SuccessResponse
                 {
                     Success = true,
                     Message = "Авторизация успешна",
                 };
-                return result;
+                return Ok(result); // Возвращаем 200 OK и объект SuccessResponse
             }
             else
             {
-                result = new SuccessResponse
+                var result = new SuccessResponse
                 {
                     Success = false,
                     Message = "Данные неверные",
                 };
-                return result;
+                return BadRequest(result); // Возвращаем 400 Bad Request и объект SuccessResponse
             }
         }
     }

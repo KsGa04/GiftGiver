@@ -7,31 +7,30 @@ namespace tests.Controllers
     [Route("api/products")]
     public class AllProductsApi : Controller
     {
-        private giftgiverContext? _db;
+        public giftgiverContext db = new giftgiverContext();
         public AllProductsApi(giftgiverContext giftgiver)
         {
-            _db = giftgiver;
+            db = giftgiver;
         }
         [HttpGet]
         [Route("/allproducts")]
         public async Task<ActionResult<IEnumerable<Подарки>>> Get()
         {
-            return await _db.Подаркиs.ToListAsync();
+            return await db.Подаркиs.ToListAsync();
         }
         [HttpGet]
         [Route("/IdProduct")]
         public async Task<ActionResult<Подарки>> Get(int id)
         {
-            // Ваш код для получения ресурса по указанному id
-            bool isIdExists = _db.Подаркиs.Any(r => r.ПодаркиId == id);
-            if (isIdExists == false)
+            var ListProduct = db.Подаркиs.Where(r => r.ПодаркиId == id).FirstOrDefault();
+            if (ListProduct == null)
             {
                 return NotFound();
             }
             else
             {
 
-                return Ok(_db.Подаркиs.Where(r => r.ПодаркиId == id).FirstOrDefault());
+                return Ok(ListProduct);
             }
         }
     }
