@@ -13,16 +13,18 @@ namespace GiftGiver.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly AuthApi _apiController;
         private readonly RegApi _regApi;
+        private readonly AuthApi _authApi;
+        private readonly AllProductsApi _allProductsApi;
         private giftgiverContext db = new giftgiverContext();
 
 
-        public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver)
+        public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver, AllProductsApi allProductsApi)
         {
             _logger = logger;
-            _apiController = apiController;
             db = giftgiver;
+            _authApi = apiController;
+            _allProductsApi = allProductsApi;
         }
         [AllowAnonymous]
         public IActionResult Authorization()
@@ -92,7 +94,13 @@ namespace GiftGiver.Controllers
         }
         public IActionResult PrivateAcc()
         {
-            return View();
+            var result = _allProductsApi.GetAll();
+            return View(result.Value);
+        }
+        public IActionResult AllGift()
+        {
+            var result = _allProductsApi.GetAll();
+            return View(result.Value);
         }
         [AllowAnonymous]
             public IActionResult Privacy()

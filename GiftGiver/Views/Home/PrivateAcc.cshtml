@@ -2,63 +2,67 @@
     Layout = "_Layout";
     ViewData["Title"] = "Личный кабинет";
 }
-
+@model IEnumerable<tests.Подарки>
 <section>
-    <form asp-action="Authorization" method="post">
+    <form asp-action="PrivateAcc" method="post">
         <div class="v133_359">
-            <div class="v133_360"></div>
-            <div class="v133_361"></div>
-            <span class="v133_362">Личный кабинет</span>
-            <div class="v133_363">
-                <span class="v133_364">Фамилия Имя Отчество</span>
-                <div class="v133_365">
-                    <span class="v133_366">Выйти</span>
-                    <div class="v133_367">
-                        <div class="v133_368"></div>
-                        <div class="v133_369"></div>
-                    </div>
+            <div class="back"></div>
+            <div class="v133_399">
+                <span class="v133_401">Список желаемого</span>
+                <div class="grid-container-wishlist">
+                    @foreach (var подарок in Model)
+                    {
+                        if (подарок.Изображение != null)
+                        {
+                            <div class="grid-item-wishlist">
+                                <img src="data:image;base64,@(Convert.ToBase64String(подарок.Изображение))" />
+                            </div>
+                        }
+                    }
                 </div>
-                <div class="v133_370"></div>
-                <div class="v133_371">
-                    <span class="v133_372">E-mail</span>
-                    <div class="v133_373">
-                        <div class="v133_374"></div>
-                        <span class="v133_375">mail569568mail.ru</span>
-                        <div class="v133_376">
-                            <div class="v133_377"></div>
+            </div>
+
+            <span class="private">Личный кабинет</span>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <span class="v133_364">Фамилия Имя Отчество</span>
+                    <div class="v133_365">
+                        <span class="v133_366">Выйти</span>
+                        <div class="v133_367">
                         </div>
                     </div>
+                    <img class="v133_370">
                 </div>
-                <div class="v133_378">
-                    <span class="v133_379">Пароль</span>
-                    <div class="v133_380">
-                        <div class="v133_381"></div>
-                        <span class="v133_382">*********</span>
-                        <div class="v133_383">
-                            <div class="v133_384"></div>
-                        </div>
+                <div class="grid-item">
+                    <span class="private_span">E-mail</span>
+                    <div class="private_input">
+                        <input class="autho_710" type="email" value="mail569568mail.ru" name="email">
                     </div>
                 </div>
-                <div class="v133_385">
-                    <span class="v133_386">Пол</span>
-                    <div class="v133_387">
-                        <div class="v133_388"></div>
-                        <span class="v133_389">Муж</span>
-                        <div class="v133_390">
-                            <div class="v133_391"></div>
-                        </div>
+                <div class="grid-item">
+                    <span class="private_span">Пароль</span>
+                    <div class="private_input">
+                        <input class="autho_710" type="password" value="*********" name="password">
                     </div>
                 </div>
-                <div class="v133_392">
-                    <span class="v133_393">Возраст</span>
-                    <div class="v133_394">
-                        <div class="v133_395"></div>
-                        <span class="v133_396">32</span>
-                        <div class="v133_397">
-                            <div class="v133_398"></div>
-                        </div>
+                <div class="grid-item">
+                    <span class="private_span">Пол</span>
+                    <div class="private_input">
+                        <input class="autho_710" type="text" value="Муж" name="pol">
                     </div>
                 </div>
+                <div class="grid-item">
+                    <span class="private_span">Возраст</span>
+                    <div class="private_input">
+                        <input class="autho_710" type="date" value="02.03.2004" name="year">
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <button class="autho_713" type="submit">Сохранить</button>
+                </div>
+                
+            </div>
+            
             </div>
     </form>
 </section>

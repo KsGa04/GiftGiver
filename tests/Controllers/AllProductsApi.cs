@@ -14,9 +14,10 @@ namespace tests.Controllers
         }
         [HttpGet]
         [Route("/allproducts")]
-        public async Task<ActionResult<IEnumerable<Подарки>>> Get()
+        public ActionResult<IEnumerable<Подарки>> GetAll()
         {
-            return await db.Подаркиs.ToListAsync();
+            var result = db.Подаркиs.ToList();
+            return result;
         }
         [HttpGet]
         [Route("/IdProduct")]

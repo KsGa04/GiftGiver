@@ -8,42 +8,29 @@ body {
 
 .v133_359 {
     width: 100%;
-    height: 819px;
-    background: rgba(255,255,255,1);
+    height: 100%;
     opacity: 1;
-    position: relative;
+    position: absolute;
     top: 0px;
     left: 0px;
     overflow: hidden;
 }
 
-.v133_360 {
+.back {
     width: 100%;
-    height: 760px;
+    height: 100%;
     background: rgba(247,245,255,1);
     opacity: 1;
     position: absolute;
-    top: 59px;
     left: 0px;
     overflow: hidden;
 }
 
-.v133_361 {
-    width: 100%;
-    height: 37px;
-    background: rgba(62,50,109,1);
-    opacity: 1;
-    position: absolute;
-    top: 782px;
-    left: 0px;
-    overflow: hidden;
-}
-
-.v133_362 {
+.private {
     width: 256px;
     color: rgba(0,0,0,1);
     position: absolute;
-    top: 150px;
+    top: 5%;
     left: 572px;
     font-family: Manrope;
     font-weight: SemiBold;
@@ -55,7 +42,6 @@ body {
 .v133_363 {
     width: 298px;
     height: 503px;
-    background: url("../images/v133_363.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -110,6 +96,7 @@ body {
     width: 15px;
     height: 15px;
     background: rgba(255,255,255,1);
+    background-image: url(../img/logout.png);
     opacity: 1;
     position: absolute;
     top: 7px;
@@ -120,7 +107,6 @@ body {
 .v133_368 {
     width: 8px;
     height: 12px;
-    background: rgba(62,50,109,1);
     opacity: 1;
     position: absolute;
     top: 1px;
@@ -511,3 +497,123 @@ body {
     top: 2px;
     left: 2px;
 }
+
+.private_input {
+    width: 298px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    transform: translate(-50%, -50%);
+    top: 35%;
+    left: 50%;
+    background-size: cover;
+    opacity: 1;
+    position: relative;
+    overflow: hidden;
+}
+.private_span {
+    width: 54px;
+    color: rgba(0,0,0,1);
+    position: relative;
+    top: 0px;
+    left: 0px;
+    font-family: Manrope;
+    font-weight: Medium;
+    font-size: 15px;
+    opacity: 1;
+    text-align: left;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 298px;
+    height: 503px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 1;
+    position: absolute;
+    top: 15%;
+    left: 115px;
+    overflow: hidden;
+}
+
+.grid-item {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.v133_399 {
+    width: 70%;
+    height: 80%;
+    background: url("../images/v133_399.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 1;
+    position: absolute;
+    top:3%;
+    left: 30%;
+    overflow: hidden;
+}
+
+.v133_400 {
+    width: 817px;
+    height: 480px;
+    background: rgba(255,255,255,1);
+    opacity: 1;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    border: 1px solid rgba(205,201,218,1);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    overflow: hidden;
+}
+
+.v133_401 {
+    width: 204px;
+    color: rgba(0,0,0,1);
+    position: relative;
+    transform: translate(-50%, 0%);
+    top:15%;
+    left: 20%;
+    font-family: Manrope;
+    font-size: 22px;
+    opacity: 1;
+    text-align: left;
+}
+.grid-container-wishlist {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 столбца */
+    grid-template-rows: min-content; /* автоматическая высота строк */
+    row-gap: 5px;
+    width: 65%;
+    height: 70%;
+    transform: translate(-50%, -50%);
+    top: 55%;
+    left: 50%;
+    position: relative;
+    background-color: white;
+    padding: 40px; /* создаем отступы по краям контейнера */
+    border-radius: 10px; /* задаем радиус закругления */
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.grid-item-wishlist {
+    text-align: center; /* выравнивание изображений по центру */
+    height: 130px;
+    width: 130px;
+}
+
+    .grid-item-wishlist img {
+        border-radius: 6px; /* задаем радиус закругления */
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* добавляем тень вокруг изображений вместо рамок */
+        height: 130px;
+        width: 130px;
+    }

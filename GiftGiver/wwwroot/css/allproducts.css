@@ -1,0 +1,64 @@
+﻿.grid-container-allproducts {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 4 столбца */
+    grid-template-rows: min-content; /* автоматическая высота строк */
+    row-gap: 5px;
+    width: 70%;
+    height: 80%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    background-color: white;
+    padding: 20px; /* создаем отступы по краям контейнера */
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border-radius: 10px; /* задаем радиус закругления */
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.grid-item-allproducts {
+    text-align: center; /* выравнивание изображений по центру */
+    height:130px;
+    width:130px;
+}
+
+    .grid-item-allproducts img {
+        border-radius: 6px; /* задаем радиус закругления */
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* добавляем тень вокруг изображений вместо рамок */
+        height:130px;
+        width:130px;
+    }
+.search-container {
+    transform: translate(-50%, -50%);
+    top: 5%;
+    left: 50%;
+    width:80%;
+    position: absolute;
+}
+    .search-container input[type="text"] {
+        width: 50%;
+        border-radius: 10px; /* задаем радиус закругления */
+        overflow: hidden;
+        height: 30px;
+        left:10%;
+        position: relative;
+    }
+    .search-container button {
+        width: 15%;
+        height: 30px;
+        background: rgba(126,107,196,1);
+        opacity: 1;
+        position: relative;
+        left: 20%;
+        top:50%;
+        transform: translate(0, -50%);
+        border-radius: 16px;
+        overflow: hidden;
+        font-family: Manrope;
+        font-weight: Bold;
+        font-size: 16px;
+        color: rgba(255,255,255,1);
+    }

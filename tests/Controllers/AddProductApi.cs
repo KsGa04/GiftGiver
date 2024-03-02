@@ -32,7 +32,7 @@ namespace tests.Controllers
         {
             var result = await LoadProduct(link);
             string[] segments = link.Split('/');
-            string itemId = segments[2];
+            string itemId = segments[4];
             decimal cost;
             NumberStyles style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
             CultureInfo culture = new CultureInfo("ru-RU");
@@ -40,6 +40,7 @@ namespace tests.Controllers
             if (decimal.TryParse(result.Item2, style, culture, out cost))
             {
                 Подарки подарки = new Подарки();
+                подарки.ПодаркиId = Convert.ToInt32(itemId);
                 подарки.Наименование = result.Item1;
                 подарки.Цена = cost;
                 подарки.Ссылка = link;
