@@ -1,16 +1,18 @@
-﻿@{
+﻿@using static GiftGiver.Controllers.HomeController;
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Личный кабинет";
 }
-@model IEnumerable<tests.Подарки>
+@model PrivateAccViewModel
 <section>
-    <form asp-action="PrivateAcc" method="post">
+    <form asp-action="PrivateAcc" method="get">
         <div class="v133_359">
             <div class="back"></div>
             <div class="v133_399">
                 <span class="v133_401">Список желаемого</span>
+                <div class="slider-container">
                 <div class="grid-container-wishlist">
-                    @foreach (var подарок in Model)
+                    @foreach (var подарок in Model.Products)
                     {
                         if (подарок.Изображение != null)
                         {
@@ -20,12 +22,13 @@
                         }
                     }
                 </div>
+                </div>
             </div>
 
             <span class="private">Личный кабинет</span>
             <div class="grid-container">
                 <div class="grid-item">
-                    <span class="v133_364">Фамилия Имя Отчество</span>
+                    <span class="v133_364" >@Model.User.Фио</span>
                     <div class="v133_365">
                         <span class="v133_366">Выйти</span>
                         <div class="v133_367">
@@ -36,29 +39,29 @@
                 <div class="grid-item">
                     <span class="private_span">E-mail</span>
                     <div class="private_input">
-                        <input class="autho_710" type="email" value="mail569568mail.ru" name="email">
+                        <input class="autho_710" type="email" value="@Model.User.Email" name="Email">
                     </div>
                 </div>
                 <div class="grid-item">
                     <span class="private_span">Пароль</span>
                     <div class="private_input">
-                        <input class="autho_710" type="password" value="*********" name="password">
+                        <input class="autho_710" type="password" value="@Model.User.Пароль" name="pass">
                     </div>
                 </div>
                 <div class="grid-item">
-                    <span class="private_span">Пол</span>
+                    <span class="private_span">Логин</span>
                     <div class="private_input">
-                        <input class="autho_710" type="text" value="Муж" name="pol">
+                        <input class="autho_710" type="text" value="@Model.User.Логин" name="login">
                     </div>
                 </div>
                 <div class="grid-item">
                     <span class="private_span">Возраст</span>
                     <div class="private_input">
-                        <input class="autho_710" type="date" value="02.03.2004" name="year">
+                        <input class="autho_710" type="date" value="@Model.User.Возраст" name="year">
                     </div>
                 </div>
                 <div class="grid-item">
-                    <button class="autho_713" type="submit">Сохранить</button>
+                    <button class="autho_713" type="submit" >Сохранить</button>
                 </div>
                 
             </div>

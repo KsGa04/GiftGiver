@@ -7,17 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="C:\Users\pc\.nuget\packages\datatables.net\2.0.1\contentFiles\any\any\wwwroot\js\dataTables.js" />
+    <Content Remove="C:\Users\pc\.nuget\packages\datatables.net\2.0.1\contentFiles\any\any\wwwroot\js\dataTables.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CefSharp.OffScreen.NETCore" Version="120.2.70" />
+    <PackageReference Include="datatables.net" Version="2.0.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.58" />
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\tests\tests.csproj" />
   </ItemGroup>
 
 </Project>

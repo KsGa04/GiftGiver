@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
-using tests;
-using tests.Controllers;
+using GiftGiver;
+using GiftGiver.Controllers;
+using Microsoft.VisualBasic;
 
 namespace GiftGiver.Controllers
 {
@@ -92,11 +93,68 @@ namespace GiftGiver.Controllers
         {
             return View();
         }
+        public class PrivateAccViewModel
+        {
+            public IEnumerable<Подарки> Products { get; set; } // замените Product на ваш реальный тип данных
+            public Пользователь User { get; set; } // замените User на ваш реальный тип данных
+        }
         public IActionResult PrivateAcc()
         {
             var result = _allProductsApi.GetAll();
-            return View(result.Value);
+            Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+            var viewModel = new PrivateAccViewModel
+            {
+                Products = result.Value,
+                User = пользователь
+            };
+            return View(viewModel);
         }
+        [HttpPost]
+        public IActionResult PrivateAcc(string email, string pass, string log, DateTime year)
+        {
+            var result = _allProductsApi.GetAll();
+            Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+            пользователь.Email = email;
+            пользователь.Пароль = pass;
+            пользователь.Логин = log;
+            пользователь.Возраст = year;
+            db.SaveChanges();
+            var viewModel = new PrivateAccViewModel
+            {
+                Products = result.Value,
+                User = пользователь
+            };
+            return View(viewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("Файл не выбран");
+            }
+
+            var allowedExtensions = new[] { ".png", ".jpeg", ".jpg" };
+            var ext = Path.GetExtension(file.FileName).ToLower();
+            if (!allowedExtensions.Contains(ext))
+            {
+                return BadRequest("Неверный формат файла. Выберите изображение в формате .png, .jpeg или .jpg");
+            }
+
+            var filePath = Path.Combine(
+                Directory.GetCurrentDirectory(), "wwwroot", "images", "userImage",
+                "newImage" + ext);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Теперь сохраните путь к загруженному изображению в базе данных или отправьте его на фронт-энд для отображения
+
+            return Ok("Изображение успешно загружено");
+        }
+
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();

@@ -539,7 +539,7 @@ $.validator.addMethod( "giroaccountNL", function( value, element ) {
  */
 $.validator.addMethod( "iban", function( value, element ) {
 
-	// Some quick simple tests to prevent needless work
+	// Some quick simple GiftGiver to prevent needless work
 	if ( this.optional( element ) ) {
 		return true;
 	}

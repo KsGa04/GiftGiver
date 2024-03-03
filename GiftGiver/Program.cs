@@ -1,8 +1,8 @@
 using GiftGiver.Controllers;
 using GiftGiver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using tests;
-using tests.Controllers;
+using GiftGiver;
+using GiftGiver.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
