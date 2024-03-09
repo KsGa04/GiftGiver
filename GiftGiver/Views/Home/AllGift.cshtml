@@ -1,22 +1,67 @@
-﻿@{
+﻿@using static GiftGiver.Controllers.HomeController;
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Лента подарков";
 }
-@model IEnumerable<GiftGiver.Подарки>
+@model PrivateAccViewModel
 <section>
     <div class="search-container">
-        <input type="text" id="search-term" placeholder="Введите запрос">
+        <input type="text" id="search-term" placeholder="Введите запрос" name="text">
         <button id="search-button">Найти</button>
     </div>
     <div class="grid-container-allproducts">
-        @foreach (var подарок in Model)
+        @foreach (var подарок in Model.Products)
         {
-            if (подарок.Изображение != null)
+            if (подарок != null)
             {
                 <div class="grid-item-allproducts">
-                    <img src="data:image;base64,@(Convert.ToBase64String(подарок.Изображение))" />
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(подарок.Изображение)"/>
+                    <p class="grid-cell-name">@подарок.Наименование</p>
+                    <a href="@подарок.Ссылка" class="btn btn-primary" id="link">Перейти</a>
+                    <a class="btn btn-primary wish-btn" id="wish" data-подарокid="@подарок.ПодаркиId">Добавить</a>
                 </div>
             }
         }
     </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.querySelectorAll('.wish-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            var подарокId = this.getAttribute('data-подарокid');
+            fetch(`/Home/ДобавитьЖелаемое?подарокId=${подарокId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка добавления в желаемое');
+                    }
+                    // Дополнительная обработка данных при необходимости
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    });
+
+    $(document).ready(function () {
+        $("#search-button").click(function () {
+            var searchText = $("#search-term").val();
+            $.get("/Home/Find", { text: searchText }, function (data) {
+                $(".grid-container-allproducts").empty(); // Очищаем контейнер перед добавлением новых элементов
+                $.each(data.products, function (index, подарок) {
+                    var newProduct = `<div class="grid-item-allproducts">
+                        <img src="data:image/jpeg;base64,${подарок.Изображение}"/> <!-- Вставляем base64 изображения как источник изображения -->
+                        <p class="grid-cell-name">${подарок.Наименование}</p>
+                        <a href="${подарок.Ссылка}" class="btn btn-primary" id="link">Перейти</a>
+                        <a class="btn btn-primary wish-btn" id="wish" data-подарокid="${подарок.ПодаркиId}">Добавить</a>
+                    </div>`;
+                    $(".grid-container-allproducts").append(newProduct);
+                });
+            });
+        });
+    });
+</script>

@@ -3,7 +3,7 @@
     public class ProductResponce
     {
         /// <summary>
-        ///     Наименование товара
+        ///     Цена товара
         /// </summary>
         public string Name { get; set; }
 
@@ -18,7 +18,7 @@
         public string Image { get; set; }
 
         /// <summary>
-        ///     Ссылка на товар
+        ///     Цена товара
         /// </summary>
         public string Link { get; set; }
     }

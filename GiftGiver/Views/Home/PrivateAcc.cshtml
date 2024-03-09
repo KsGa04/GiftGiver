@@ -18,6 +18,9 @@
                         {
                             <div class="grid-item-wishlist">
                                 <img src="data:image;base64,@(Convert.ToBase64String(подарок.Изображение))" />
+                                    <p class="grid-cell-name">@подарок.Наименование</p>
+                                    <a href="@подарок.Ссылка" class="btn btn-primary" id="link">Перейти</a>
+                                    <a class="btn btn-primary delete-wish" data-подарокid="@подарок.ПодаркиId" id="wish">Удалить</a>
                             </div>
                         }
                     }
@@ -34,7 +37,6 @@
                         <div class="v133_367">
                         </div>
                     </div>
-                    <img class="v133_370">
                 </div>
                 <div class="grid-item">
                     <span class="private_span">E-mail</span>
@@ -69,3 +71,26 @@
             </div>
     </form>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.querySelectorAll('.delete-wish').forEach(btn => {
+        btn.addEventListener('click', function () {
+            var подарокId = this.getAttribute('data-подарокid');
+            fetch(`/Home/УдалитьЖелаемое?подарокId=${подарокId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка удаления желаемого');
+                    }
+                    // Дополнительная обработка данных при необходимости
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+    });
+</script>

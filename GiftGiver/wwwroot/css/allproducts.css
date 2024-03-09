@@ -1,8 +1,8 @@
 ﻿.grid-container-allproducts {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 4 столбца */
+    grid-template-columns: repeat(7, 1fr);
     grid-template-rows: min-content; /* автоматическая высота строк */
-    row-gap: 5px;
+    row-gap: 10%;
     width: 70%;
     height: 80%;
     transform: translate(-50%, -50%);
@@ -20,7 +20,7 @@
 
 .grid-item-allproducts {
     text-align: center; /* выравнивание изображений по центру */
-    height:130px;
+    height:230px;
     width:130px;
 }
 
@@ -62,3 +62,26 @@
         font-size: 16px;
         color: rgba(255,255,255,1);
     }
+.grid-container-allproducts .grid-cell-name {
+    font-size: 10px;
+    height:30px;
+}
+#link {
+    height: 30px;
+    width: 100px;
+    font-size: 12px;
+    position: relative;
+    background: rgba(126,107,196,1);
+    border-radius: 9px;
+    overflow: hidden;
+}
+#wish {
+    margin-top: 5px;
+    height: 30px;
+    width: 100px;
+    position: relative;
+    font-size: 12px;
+    background: rgba(126,107,196,1);
+    border-radius: 9px;
+    overflow: hidden;
+}

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using GiftGiver;
 using GiftGiver.Controllers;
 using Microsoft.VisualBasic;
+using Microsoft.EntityFrameworkCore;
 
 namespace GiftGiver.Controllers
 {
@@ -17,15 +18,19 @@ namespace GiftGiver.Controllers
         private readonly RegApi _regApi;
         private readonly AuthApi _authApi;
         private readonly AllProductsApi _allProductsApi;
+        private readonly WishListApi _wishListApi;
+        private readonly TapeApi _apeApi;
         private giftgiverContext db = new giftgiverContext();
 
 
-        public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver, AllProductsApi allProductsApi)
+        public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver, AllProductsApi allProductsApi, WishListApi wishListApi, TapeApi apeApi)
         {
             _logger = logger;
             db = giftgiver;
             _authApi = apiController;
             _allProductsApi = allProductsApi;
+            _wishListApi = wishListApi;
+            _apeApi = apeApi;
         }
         [AllowAnonymous]
         public IActionResult Authorization()
@@ -38,7 +43,7 @@ namespace GiftGiver.Controllers
         public IActionResult Authorization(string loginOrEmail, string password)
         {
             CurrentUser.CurrentClientId = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password select c.ПользовательId).FirstOrDefault();
-            Пользователь client = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password select c).FirstOrDefault();
+            CurrentUser.CurrentAdminId = (from c in db.Администраторs where (c.Логин == loginOrEmail && c.Пароль == password) select c.АдминистраторId).FirstOrDefault();
             if (CurrentUser.CurrentClientId > 0)
             {
                 var claims = new List<Claim> { new Claim(ClaimTypes.Name, "test"),
@@ -53,6 +58,21 @@ namespace GiftGiver.Controllers
                     Message = "Авторизация успешна",
                 };
                 return RedirectToAction("PrivateAcc", "Home");
+            }
+            else if (CurrentUser.CurrentAdminId > 0)
+            {
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, "test"),
+                new Claim(ClaimTypes.Email, "testc@mail.ru")};
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                var result = new SuccessResponse
+                {
+                    Success = true,
+                    Message = "Авторизация успешна",
+                };
+                return Redirect("/swagger/index.html");
             }
             else
             {
@@ -95,16 +115,22 @@ namespace GiftGiver.Controllers
         }
         public class PrivateAccViewModel
         {
-            public IEnumerable<Подарки> Products { get; set; } // замените Product на ваш реальный тип данных
-            public Пользователь User { get; set; } // замените User на ваш реальный тип данных
+            public IEnumerable<Подарки> Products { get; set; }
+            public Пользователь User { get; set; }
         }
         public IActionResult PrivateAcc()
         {
-            var result = _allProductsApi.GetAll();
             Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+            var wishlist = db.Желаемоеs
+        .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
+        .Include(w => w.Подарки)
+        .Select(w => w.Подарки)
+        .ToList();
+
+            // Создаем модель представления и передаем список желаемых подарков
             var viewModel = new PrivateAccViewModel
             {
-                Products = result.Value,
+                Products = wishlist,
                 User = пользователь
             };
             return View(viewModel);
@@ -154,12 +180,53 @@ namespace GiftGiver.Controllers
 
             return Ok("Изображение успешно загружено");
         }
-
+        [Authorize]
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();
-            return View(result.Value);
+            var viewModel = new PrivateAccViewModel
+            {
+                Products = result.Value
+            };
+            return View(viewModel);
         }
+        [HttpGet]
+        public ActionResult Find(string text)
+        {
+            var productList = db.Подаркиs.Where(x => x.Наименование.Contains(text)).ToList();
+            var viewModel = new PrivateAccViewModel
+            {
+                Products = productList
+            };
+            return Json(viewModel);
+        }
+        [HttpPost]
+        public ActionResult ДобавитьЖелаемое(int подарокId)
+        {
+            var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).ToList();
+            var ужеЖелаемый = желаемое.Any(ж => ж.ПодаркиId == подарокId);
+
+            if (ужеЖелаемый)
+            {
+                return Json(new { success = false });
+            }
+            else
+            {
+                var wish = _wishListApi.AddWish(CurrentUser.CurrentClientId, подарокId);
+                var tape = _apeApi.FormattingAdd(CurrentUser.CurrentClientId, подарокId);
+                return Json(new { success = true });
+            }
+        }
+        [HttpDelete]
+        public ActionResult УдалитьЖелаемое(int подарокId)
+        {
+            var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId && x.ПодаркиId == подарокId).FirstOrDefault();
+            db.Желаемоеs.Remove(желаемое);
+            db.SaveChanges();
+                return Json(new { success = true });
+        }
+
+
         [AllowAnonymous]
             public IActionResult Privacy()
         {

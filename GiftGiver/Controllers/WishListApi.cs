@@ -28,5 +28,19 @@ namespace GiftGiver.Controllers
                 return Ok(WishList);
             }
         }
+        [HttpPost]
+        [Route("/AddWish")]
+        public async Task<ActionResult<Желаемое>> AddWish(int idПользователь, int idПодарка)
+        {
+            Желаемое желаемое = new Желаемое()
+            {
+                ПользовательId = idПользователь,
+                ПодаркиId = idПодарка,
+            };
+            db.Желаемоеs.Add(желаемое);
+            db.SaveChanges();
+            return Ok(желаемое);
+
+        }
     }
 }
