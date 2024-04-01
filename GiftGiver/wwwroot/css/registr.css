@@ -1,143 +1,145 @@
-﻿.rectangle-10 {
-    position: absolute;
-    width: 701px;
-    height: 457px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    background-color: #ffffff;
-    border-radius: 20px;
-    border: 1px solid;
-    border-color: #ccc9d9;
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Два столбца равной ширины */
-    grid-template-rows: auto auto auto auto; /* Четыре строки */
-    gap: 10px; /* Отступ между элементами */
-}
+﻿@media (min-height: 600px) and (min-width: 1200px) {
+    .rectangle-10 {
+        position: absolute;
+        width: 701px;
+        height: 457px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        background-color: #ffffff;
+        border-radius: 20px;
+        border: 1px solid;
+        border-color: #ccc9d9;
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Два столбца равной ширины */
+        grid-template-rows: auto auto auto auto; /* Четыре строки */
+        gap: 10px; /* Отступ между элементами */
+    }
 
-.text-wrapper {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: "Manrope-SemiBold", Helvetica;
-    font-weight: 600;
-    color: #000000;
-    font-size: 24px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: normal;
-    grid-column: span 2;
-    margin-top:3%;
-}
+    .text-wrapper {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Manrope-SemiBold", Helvetica;
+        font-weight: 600;
+        color: #000000;
+        font-size: 24px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: normal;
+        grid-column: span 2;
+        margin-top: 3%;
+    }
 
-.group-5 {
-    position: relative;
-    width: 300px;
-    height: 83px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    left: 50%;
-}
+    .group-5 {
+        position: relative;
+        width: 300px;
+        height: 83px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+    }
 
-.text-wrapper-2 {
-    font-family: "Manrope-Medium", Helvetica;
-    font-weight: 500;
-    color: #000000;
-    font-size: 15px;
-    position: absolute;
-    letter-spacing: 0;
-    line-height: 24px;
-    white-space: nowrap;
-}
+    .text-wrapper-2 {
+        font-family: "Manrope-Medium", Helvetica;
+        font-weight: 500;
+        color: #000000;
+        font-size: 15px;
+        position: absolute;
+        letter-spacing: 0;
+        line-height: 24px;
+        white-space: nowrap;
+    }
 
-.overlap-group-wrapper {
-    position: absolute;
-    width: 300px;
-    height: 50px;
-    top: 33px;
-    left: 0;
-}
+    .overlap-group-wrapper {
+        position: absolute;
+        width: 300px;
+        height: 50px;
+        top: 33px;
+        left: 0;
+    }
 
-.overlap-group {
-    position: relative;
-    width: 298px;
-    height: 50px;
-    background-color: #ffffff;
-    border-radius: 7px;
-    border: 1px solid;
-    border-color: #cdc9da;
-    font-family: "Manrope-Regular", Helvetica;
-    font-weight: 400;
-    color: #636363;
-    font-size: 16px;
-    line-height: 24px;
-    white-space: nowrap;
-    padding-left: 3%;
-}
+    .overlap-group {
+        position: relative;
+        width: 298px;
+        height: 50px;
+        background-color: #ffffff;
+        border-radius: 7px;
+        border: 1px solid;
+        border-color: #cdc9da;
+        font-family: "Manrope-Regular", Helvetica;
+        font-weight: 400;
+        color: #636363;
+        font-size: 16px;
+        line-height: 24px;
+        white-space: nowrap;
+        padding-left: 3%;
+    }
 
-.group-6 {
-    position: relative;
-    width: 300px;
-    height: 83px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    left: 50%;
-}
+    .group-6 {
+        position: relative;
+        width: 300px;
+        height: 83px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+    }
 
-.group-7 {
-    position: relative;
-    width: 300px;
-    height: 83px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    left: 50%;
-}
+    .group-7 {
+        position: relative;
+        width: 300px;
+        height: 83px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+    }
 
-.text-wrapper-4 {
-    top: 15px;
-    left: 16px;
-    font-family: "Manrope-Regular", Helvetica;
-    font-weight: 400;
-    color: #636363;
-    font-size: 16px;
-    position: absolute;
-    letter-spacing: 0;
-    line-height: 24px;
-    white-space: nowrap;
-}
+    .text-wrapper-4 {
+        top: 15px;
+        left: 16px;
+        font-family: "Manrope-Regular", Helvetica;
+        font-weight: 400;
+        color: #636363;
+        font-size: 16px;
+        position: absolute;
+        letter-spacing: 0;
+        line-height: 24px;
+        white-space: nowrap;
+    }
 
-.group-8 {
-    position: relative;
-    width: 300px;
-    height: 83px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    left: 50%;
-}
+    .group-8 {
+        position: relative;
+        width: 300px;
+        height: 83px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+    }
 
-.div-wrapper {
-    position: relative;
-    width: 227px;
-    height: 50px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    grid-column: span 2;
-}
+    .div-wrapper {
+        position: relative;
+        width: 227px;
+        height: 50px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        grid-column: span 2;
+    }
 
-.overlap-2 {
-    position: relative;
-    width: 225px;
-    height: 50px;
-    background-color: #7e6bc4;
-    border-radius: 7px;
-    font-family: "Manrope-Bold", Helvetica;
-    font-weight: 700;
-    color: #ffffff;
-    font-size: 16px;
-    text-align: center;
-    letter-spacing: 0;
-    line-height: 24px;
-    white-space: nowrap;
+    .overlap-2 {
+        position: relative;
+        width: 225px;
+        height: 50px;
+        background-color: #7e6bc4;
+        border-radius: 7px;
+        font-family: "Manrope-Bold", Helvetica;
+        font-weight: 700;
+        color: #ffffff;
+        font-size: 16px;
+        text-align: center;
+        letter-spacing: 0;
+        line-height: 24px;
+        white-space: nowrap;
+    }
 }

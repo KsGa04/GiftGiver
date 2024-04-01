@@ -5,10 +5,12 @@
 }
 @model PrivateAccViewModel
 <section>
+    <form asp-action="AllGift" method="post">
     <div class="search-container">
-        <input type="text" id="search-term" placeholder="Введите запрос" name="text">
+        <input type="text" id="search-term" placeholder="Введите запрос" name="find">
         <button id="search-button">Найти</button>
     </div>
+    <div class="slider-container-allproducts">
     <div class="grid-container-allproducts">
         @foreach (var подарок in Model.Products)
         {
@@ -23,6 +25,8 @@
             }
         }
     </div>
+   </div>
+   </form>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -47,21 +51,59 @@
         });
     });
 
-    $(document).ready(function () {
-        $("#search-button").click(function () {
-            var searchText = $("#search-term").val();
-            $.get("/Home/Find", { text: searchText }, function (data) {
-                $(".grid-container-allproducts").empty(); // Очищаем контейнер перед добавлением новых элементов
-                $.each(data.products, function (index, подарок) {
-                    var newProduct = `<div class="grid-item-allproducts">
-                        <img src="data:image/jpeg;base64,${подарок.Изображение}"/> <!-- Вставляем base64 изображения как источник изображения -->
-                        <p class="grid-cell-name">${подарок.Наименование}</p>
-                        <a href="${подарок.Ссылка}" class="btn btn-primary" id="link">Перейти</a>
-                        <a class="btn btn-primary wish-btn" id="wish" data-подарокid="${подарок.ПодаркиId}">Добавить</a>
-                    </div>`;
-                    $(".grid-container-allproducts").append(newProduct);
-                });
+    //document.addEventListener("DOMContentLoaded", function (event) {
+    //    var images = document.querySelectorAll('.grid-item-allproducts img');
+    //    images.forEach(function (image) {
+    //        var timeoutId;
+    //        image.addEventListener("mouseover", function (e) {
+    //            timeoutId = setTimeout(function () {
+    //                var parentDiv = e.target.parentNode;
+    //                var giftName = parentDiv.querySelector('.grid-cell-name').innerText;
+    //              /*  var giftPrice = parentDiv.querySelector('.grid-cell-price').innerText;*/ // Предположим, что у вас есть отдельный элемент для цены подарка
+    //                var message = 'Подарок: ' + giftName /*+ ', Цена: ' + giftPrice*/;
+    //                alert(message);
+    //            }, 1000); // Задержка в 3 секунды
+    //        });
+    //        image.addEventListener("mouseout", function () {
+    //            clearTimeout(timeoutId); // Очищаем задержку при уходе курсора с изображения
+    //        });
+    //    });
+    //});
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var images = document.querySelectorAll('.grid-item-allproducts img');
+        images.forEach(function (image) {
+            var overlay = document.createElement('div');
+            overlay.classList.add('image-overlay');
+            image.parentNode.appendChild(overlay);
+
+            image.addEventListener('mouseover', function () {
+                overlay.style.display = 'block';
+                // Тут можно также показать кнопку "Добавить"
+                var addButton = image.parentNode.querySelector('.wish-btn');
+                addButton.style.display = 'block';
+            });
+
+            image.addEventListener('mouseout', function () {
+                overlay.style.display = 'none';
+                // Тут можно также скрыть кнопку "Добавить"
+                var addButton = image.parentNode.querySelector('.wish-btn');
+                addButton.style.display = 'none';
             });
         });
     });
+    //$(document).ready(function () {
+    //    $('#search-button').click(function () {
+    //        $.ajax({
+    //            url: '/Home/Find', // замените "Home" на имя вашего контроллера
+    //            type: 'GET', // или 'POST', в зависимости от метода Find
+    //            success: function (result) {
+    //                // обработка результата
+    //            },
+    //            error: function () {
+    //                // обработка ошибки
+    //            }
+    //        });
+    //    });
+    //});
 </script>

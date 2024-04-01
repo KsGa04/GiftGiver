@@ -13,6 +13,8 @@ builder.Services.AddScoped<giftgiverContext>();
 builder.Services.AddTransient<AllProductsApi>();
 builder.Services.AddTransient<WishListApi>();
 builder.Services.AddTransient<TapeApi>();
+builder.Services.AddTransient<RegApi>();
+builder.Services.AddTransient<AddProductApi>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();

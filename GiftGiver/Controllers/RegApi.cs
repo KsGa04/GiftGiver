@@ -21,7 +21,7 @@ namespace GiftGiver.Controllers
 
         [HttpPost]
         [Route("postreg")]
-        public SuccessResponse Registration(string login, string email, string password)
+        public SuccessResponse Registration(string login, string email, string password, string fio)
         {
             Пользователь Clients = (from c in db.Пользовательs where c.Email == email || c.Логин == login select c).FirstOrDefault();
             if (Clients != null)
@@ -45,7 +45,15 @@ namespace GiftGiver.Controllers
             }
             else
             {
-                db.Add(new Пользователь { Логин = login, Email = email, Пароль = password, РолиId = 1 });
+                Пользователь пользователь = new Пользователь()
+                {
+                    Логин = login,
+                    Email = email,
+                    Пароль = password,
+                    РолиId = 1,
+                    Фио = fio
+                };
+                db.Пользовательs.Add(пользователь);
                 db.SaveChanges();
                 result = new SuccessResponse
                 {

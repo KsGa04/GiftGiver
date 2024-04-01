@@ -9,6 +9,7 @@ using GiftGiver;
 using GiftGiver.Controllers;
 using Microsoft.VisualBasic;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace GiftGiver.Controllers
 {
@@ -18,12 +19,13 @@ namespace GiftGiver.Controllers
         private readonly RegApi _regApi;
         private readonly AuthApi _authApi;
         private readonly AllProductsApi _allProductsApi;
+        private readonly AddProductApi _addProductApi;
         private readonly WishListApi _wishListApi;
         private readonly TapeApi _apeApi;
         private giftgiverContext db = new giftgiverContext();
 
 
-        public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver, AllProductsApi allProductsApi, WishListApi wishListApi, TapeApi apeApi)
+        public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver, AllProductsApi allProductsApi, WishListApi wishListApi, TapeApi apeApi, AddProductApi addProductApi, RegApi regApi)
         {
             _logger = logger;
             db = giftgiver;
@@ -31,6 +33,8 @@ namespace GiftGiver.Controllers
             _allProductsApi = allProductsApi;
             _wishListApi = wishListApi;
             _apeApi = apeApi;
+            _addProductApi = addProductApi;
+            _regApi = regApi;
         }
         [AllowAnonymous]
         public IActionResult Authorization()
@@ -90,9 +94,9 @@ namespace GiftGiver.Controllers
         }
 
         [HttpPost]
-        public IActionResult Registration(string login, string email, string password)
+        public IActionResult Registration(string login, string email, string pass, string FIO)
         {
-            var result = _regApi.Registration(login, email, password);
+            var result = _regApi.Registration(login, email, pass, FIO);
             if (result.Success == true)
             {
                 return RedirectToAction("Authorization", "Home");
@@ -118,6 +122,7 @@ namespace GiftGiver.Controllers
             public IEnumerable<Подарки> Products { get; set; }
             public Пользователь User { get; set; }
         }
+        [Authorize]
         public IActionResult PrivateAcc()
         {
             Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
@@ -135,86 +140,115 @@ namespace GiftGiver.Controllers
             };
             return View(viewModel);
         }
+        [Authorize]
         [HttpPost]
-        public IActionResult PrivateAcc(string email, string pass, string log, DateTime year)
+        public IActionResult PrivateAcc(string mail, string pass, string log, DateTime year)
         {
-            var result = _allProductsApi.GetAll();
             Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
-            пользователь.Email = email;
+            пользователь.Email = mail;
             пользователь.Пароль = pass;
             пользователь.Логин = log;
             пользователь.Возраст = year;
             db.SaveChanges();
+            пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+            var wishlist = db.Желаемоеs
+        .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
+        .Include(w => w.Подарки)
+        .Select(w => w.Подарки)
+        .ToList();
             var viewModel = new PrivateAccViewModel
             {
-                Products = result.Value,
+                Products = wishlist,
                 User = пользователь
             };
             return View(viewModel);
         }
-        [HttpPost]
-        public async Task<IActionResult> ChangeImage(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("Файл не выбран");
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> ChangeImage(IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return BadRequest("Файл не выбран");
+        //    }
 
-            var allowedExtensions = new[] { ".png", ".jpeg", ".jpg" };
-            var ext = Path.GetExtension(file.FileName).ToLower();
-            if (!allowedExtensions.Contains(ext))
-            {
-                return BadRequest("Неверный формат файла. Выберите изображение в формате .png, .jpeg или .jpg");
-            }
+        //    var allowedExtensions = new[] { ".png", ".jpeg", ".jpg" };
+        //    var ext = Path.GetExtension(file.FileName).ToLower();
+        //    if (!allowedExtensions.Contains(ext))
+        //    {
+        //        return BadRequest("Неверный формат файла. Выберите изображение в формате .png, .jpeg или .jpg");
+        //    }
 
-            var filePath = Path.Combine(
-                Directory.GetCurrentDirectory(), "wwwroot", "images", "userImage",
-                "newImage" + ext);
+        //    var filePath = Path.Combine(
+        //        Directory.GetCurrentDirectory(), "wwwroot", "images", "userImage",
+        //        "newImage" + ext);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
+        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    {
+        //        await file.CopyToAsync(stream);
+        //    }
 
-            // Теперь сохраните путь к загруженному изображению в базе данных или отправьте его на фронт-энд для отображения
+        //    // Теперь сохраните путь к загруженному изображению в базе данных или отправьте его на фронт-энд для отображения
 
-            return Ok("Изображение успешно загружено");
-        }
-        [Authorize]
+        //    return Ok("Изображение успешно загружено");
+        //}
+        //[Authorize]
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();
+            if (CurrentUser.CurrentClientId != 0)
+            {
+                result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
+            }
+            else
+            {
+                result = _allProductsApi.GetAll();
+            }
             var viewModel = new PrivateAccViewModel
             {
                 Products = result.Value
             };
             return View(viewModel);
         }
-        [HttpGet]
-        public ActionResult Find(string text)
+        [HttpPost]
+        public IActionResult AllGift(string find)
         {
-            var productList = db.Подаркиs.Where(x => x.Наименование.Contains(text)).ToList();
+            var productList = new List<Подарки>();
+            if (find != null)
+            {
+                productList = db.Подаркиs.Where(x => x.Наименование.Contains(find)).ToList();
+            }
+            else
+            {
+                productList = db.Подаркиs.ToList();
+            }
             var viewModel = new PrivateAccViewModel
             {
                 Products = productList
             };
-            return Json(viewModel);
+            return View(viewModel);
         }
         [HttpPost]
         public ActionResult ДобавитьЖелаемое(int подарокId)
         {
-            var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).ToList();
-            var ужеЖелаемый = желаемое.Any(ж => ж.ПодаркиId == подарокId);
-
-            if (ужеЖелаемый)
+            if (CurrentUser.CurrentClientId != 0)
             {
-                return Json(new { success = false });
+                var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).ToList();
+                var ужеЖелаемый = желаемое.Any(ж => ж.ПодаркиId == подарокId);
+
+                if (ужеЖелаемый)
+                {
+                    return Json(new { success = false });
+                }
+                else
+                {
+                    var wish = _wishListApi.AddWish(CurrentUser.CurrentClientId, подарокId);
+                    var tape = _apeApi.FormattingAdd(CurrentUser.CurrentClientId, подарокId);
+                    return Json(new { success = true });
+                }
             }
             else
             {
-                var wish = _wishListApi.AddWish(CurrentUser.CurrentClientId, подарокId);
-                var tape = _apeApi.FormattingAdd(CurrentUser.CurrentClientId, подарокId);
-                return Json(new { success = true });
+                return RedirectToAction("Authorization", "Home");
             }
         }
         [HttpDelete]
@@ -223,9 +257,32 @@ namespace GiftGiver.Controllers
             var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId && x.ПодаркиId == подарокId).FirstOrDefault();
             db.Желаемоеs.Remove(желаемое);
             db.SaveChanges();
-                return Json(new { success = true });
+            var url = Url.Action("PrivateAcc", "Home");
+            return Json(new { success = true, redirectUrl = url });
         }
 
+        public IActionResult Exit()
+        {
+            CurrentUser.CurrentAdminId = 0;
+            CurrentUser.CurrentClientId = 0;
+            return RedirectToAction("Authorization", "Home");
+        }
+
+        public IActionResult ChatBot()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult HandleMessage(string message)
+        {
+            // Обработка полученного сообщения
+            // ...
+
+            // Формирование ответа
+            string response = "Ответ на ваше сообщение: " + message;
+
+            return Json(new { response });
+        }
 
         [AllowAnonymous]
             public IActionResult Privacy()

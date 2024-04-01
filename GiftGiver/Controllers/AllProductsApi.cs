@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.Swagger.Annotations;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Http;
 
 namespace GiftGiver.Controllers
 {
@@ -51,6 +51,7 @@ namespace GiftGiver.Controllers
                 ListProduct.Получатель = giver;
                 ListProduct.Жанр = genre;
                 db.SaveChanges();
+                ListProduct = db.Подаркиs.Where(r => r.ПодаркиId == id).FirstOrDefault();
                 return Ok(ListProduct);
             }
         }
@@ -71,28 +72,31 @@ namespace GiftGiver.Controllers
             }
         }
         [HttpGet]
-        [Route("/productsForPerson")]
-        public ActionResult<IEnumerable<Подарки>> GetForPerson(int id)
+        [Route("/allproducts/{id}")]
+        public ActionResult<IEnumerable<Подарки>> GetAllById(int id)
         {
-            var lenta = db.Лентаs.Where(x => x.ПользовательId ==id).ToList();
-            if (lenta == null)
+            var giftsFromFeed = db.Лентаs.Where(лента => лента.ПользовательId == id)
+                                         .Select(лента => лента.ПодаркиId)
+                                         .ToList();
+
+            var similarGifts = new List<Подарки>();
+
+            foreach (var giftId in giftsFromFeed)
             {
-                var result = db.Подаркиs.ToList();
-                return result;
-            }
-            else
-            {
-                List<Подарки> похожиеПодарки = new List<Подарки>();
-                foreach (var запись in lenta)
+                var gift = db.Подаркиs.FirstOrDefault(подарок => подарок.ПодаркиId == giftId);
+                if (gift != null)
                 {
-                    // Получаем данные о подарке по ПодаркиId из таблицы Лента
-                    var подарок = db.Подаркиs.Where(p => p.ПодаркиId == запись.ПодаркиId).FirstOrDefault();
-                    // Получаем список похожих товаров из таблицы Подарки
-                    var похожиеТовары = db.Подаркиs.Where(p => p.Наименование.Contains(подарок.Наименование) && p.Жанр == подарок.Жанр).ToList();
-                    похожиеПодарки.AddRange(похожиеТовары);
+                    var words = gift.Наименование.Split(' '); // разбиваем название подарка на слова
+                    foreach (var word in words)
+                    {
+                        var similarGiftsForWord = db.Подаркиs.Where(подарок => подарок.Наименование.Contains(word) && подарок.ПодаркиId != giftId)
+                                                             .ToList();
+                        similarGifts.AddRange(similarGiftsForWord);
+                    }
                 }
-                return похожиеПодарки;
             }
+
+            return similarGifts.Distinct().ToList(); // возвращаем уникальные подарки
         }
     }
 }

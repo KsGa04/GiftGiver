@@ -16,7 +16,7 @@ namespace GiftGiver.Controllers
         [Route("/UserTape")]
         public async Task<ActionResult<Лента>> Get(int id)
         {
-            var ListTape = db.Лентаs.Where(r => r.ПользовательId == id).FirstOrDefault();
+            var ListTape = db.Лентаs.Where(r => r.ПользовательId == id).ToList();
             if (ListTape == null)
             {
                 return NotFound();

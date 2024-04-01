@@ -28,7 +28,7 @@ namespace GiftGiver.Controllers
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.gmail.com", // Используйте нужный SMTP-сервер
-                    Port = 587,
+                    Port = 465,
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false,

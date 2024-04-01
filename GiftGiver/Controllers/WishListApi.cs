@@ -17,7 +17,7 @@ namespace GiftGiver.Controllers
         public async Task<ActionResult<Желаемое>> Get(int id)
         {
             // Ваш код для получения ресурса по указанному id
-            var WishList = db.Желаемоеs.Where(r => r.ПользовательId == id).FirstOrDefault();
+            var WishList = db.Желаемоеs.Where(r => r.ПользовательId == id).ToList();
             if (WishList == null)
             {
                 return NotFound();

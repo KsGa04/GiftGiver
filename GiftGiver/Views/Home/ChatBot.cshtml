@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Чат-бот";
+}
+<section>
+    <form asp-action="ChatBot" method="post">
+        <div id="chat">
+            <!-- Отображение сообщений -->
+            <div id="messages">
+                <!-- ... -->
+            </div>
+
+            <!-- Поле ввода сообщений -->
+            <input type="text" id="inputMessage" />
+
+            <!-- Кнопка отправки сообщения -->
+            <button id="sendMessage">Отправить</button>
+        </div>
+    </form>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Обработчик нажатия кнопки отправки сообщения
+        $("#sendMessage").click(function () {
+            var message = $("#inputMessage").val();
+
+            // Отправка сообщения на сервер
+            $.ajax({
+                url: "/Home/HandleMessage",
+                type: "POST",
+                data: { message: message },
+                success: function (response) {
+                    // Обработка полученного ответа
+                    var message = response.response;
+
+                    // Отображение ответа в чате
+                    $("#messages").append("<div class='message'>" + message + "</div>");
+                }
+            });
+
+            // Очистка поля ввода сообщения
+            $("#inputMessage").val("");
+        });
+    });
+</script>

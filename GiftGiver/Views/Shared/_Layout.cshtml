@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/css/registr.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/recover.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/private.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Chat.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/allproducts.css" asp-append-version="true" />
     <script src="https://kit.fontawesome.com/45c3cf2169.js" crossorigin="anonymous"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -20,17 +21,17 @@
         <div>
             <div class="v133_719"></div>
             <a class="lenta" asp-action="AllGift">Лента подарков</a>
-            <span class="giftgiver">Gift/Giver</span>
+            <a class="giftgiver" asp-action="Authorization">Gift/Giver</a>
             <span class="poxoshie">Похожие подарки</span>
-            <div class="v133_723">
+            <div class="v133_723" id="cabinetBlock">
                 <div class="v133_724">
-                    <span class="cabinet" >Личный кабинет</span>
+                    <a class="cabinet" asp-action="PrivateAcc">Личный кабинет</a>
                 </div>
                 <div class="v133_726"></div>
             </div>
             <div class="v133_728">
                 <div class="v133_729">
-                    <span class="chat">Чат-бот</span>
+                    <a class="chat" asp-action="ChatBot">Чат-бот</a>
                 </div>
                 <div class="v133_731" />
             </div>

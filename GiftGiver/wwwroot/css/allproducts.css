@@ -16,20 +16,22 @@
     border-radius: 10px; /* задаем радиус закругления */
     overflow: hidden;
     border: 1px solid #ccc;
+    overflow-y: scroll;
 }
 
 .grid-item-allproducts {
     text-align: center; /* выравнивание изображений по центру */
-    height:230px;
-    width:130px;
+    height: 230px;
+    width: 130px;
+    position: relative;
 }
 
     .grid-item-allproducts img {
         border-radius: 6px; /* задаем радиус закругления */
         overflow: hidden;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* добавляем тень вокруг изображений вместо рамок */
-        height:130px;
-        width:130px;
+        height: 130px;
+        width: 130px;
     }
 .search-container {
     transform: translate(-50%, -50%);
@@ -85,3 +87,17 @@
     border-radius: 9px;
     overflow: hidden;
 }
+
+.grid-item-allproducts img {
+    border-radius: 6px; /* задаем радиус закругления */
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* добавляем тень вокруг изображений вместо рамок */
+    height: 130px;
+    width: 130px;
+    transition: opacity 0.3s; /* добавляем плавное переход на изменение прозрачности */
+}
+
+    .grid-item-allproducts img:hover {
+        opacity: 0.7; /* устанавливаем требуемую прозрачность при наведении курсора */
+        filter: brightness(70%); /* добавляем эффект затемнения */
+    }

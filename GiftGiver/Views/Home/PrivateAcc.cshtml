@@ -5,7 +5,7 @@
 }
 @model PrivateAccViewModel
 <section>
-    <form asp-action="PrivateAcc" method="get">
+    <form asp-action="PrivateAcc" method="post">
         <div class="v133_359">
             <div class="back"></div>
             <div class="v133_399">
@@ -33,7 +33,7 @@
                 <div class="grid-item">
                     <span class="v133_364" >@Model.User.Фио</span>
                     <div class="v133_365">
-                        <span class="v133_366">Выйти</span>
+                        <span class="v133_366" onclick="location.href='@Url.Action("Exit", "Home")'">Выйти</span>
                         <div class="v133_367">
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="grid-item">
                     <span class="private_span">E-mail</span>
                     <div class="private_input">
-                        <input class="autho_710" type="email" value="@Model.User.Email" name="Email">
+                        <input class="autho_710" type="email" value="@Model.User.Email" name="mail">
                     </div>
                 </div>
                 <div class="grid-item">
@@ -53,13 +53,13 @@
                 <div class="grid-item">
                     <span class="private_span">Логин</span>
                     <div class="private_input">
-                        <input class="autho_710" type="text" value="@Model.User.Логин" name="login">
+                        <input class="autho_710" type="text" value="@Model.User.Логин" name="log">
                     </div>
                 </div>
                 <div class="grid-item">
                     <span class="private_span">Возраст</span>
                     <div class="private_input">
-                        <input class="autho_710" type="date" value="@Model.User.Возраст" name="year">
+                        <input class="autho_710" type="datetime-local" value="@Model.User.Возраст" name="year">
                     </div>
                 </div>
                 <div class="grid-item">
@@ -85,6 +85,10 @@
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Ошибка удаления желаемого');
+                    }
+                    else {
+                        alert('Товар удален');
+                        window.location.href = "/Home/PrivateAcc";
                     }
                     // Дополнительная обработка данных при необходимости
                 })
