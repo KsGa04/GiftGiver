@@ -1,43 +1,90 @@
-﻿#chat {
-    border: 1px solid #ccc;
-    padding: 10px;
-    max-width: 400px;
+﻿.chat-container {
+    width: 550px;
+    height: 550px;
     margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 5px 0 0 5px;
+    transform: translate(-50%, -50%);
 }
 
-#messages {
-    margin-bottom: 10px;
-    height: 200px;
-    overflow-y: auto;
-    border: 1px solid #eee;
-    padding: 5px;
+.chat-messages {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    overflow-y: scroll;
 }
 
 .message {
-    background-color: #f2f2f2;
+    display: flex;
+    align-items: center;
     padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 10px;
-}
-
-#inputMessage {
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-#sendMessage {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
+    margin: 5px 0;
     border-radius: 5px;
-    cursor: pointer;
 }
 
-    #sendMessage:hover {
-        background-color: #0056b3;
-    }
-.message {
-    color:black;
+.message-content {
+    background-color: #d3d3d3;
+    padding: 10px;
+    border-radius: 5px;
+    background: #FFD8D8;
 }
+
+.their {
+    background: #DFD6FF;
+}
+
+.their-message {
+    flex-direction: row-reverse;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background-image: url("../img/technical-support.png");
+    background-size: cover; /* Размер фона */
+    background-position: center;
+}
+
+.their-avatar {
+    order: -1; /* Используйте свойство order для перемещения изображения вправо */
+    margin-left: 10px;
+    background-image: url("../img/user.png");
+    background-size: cover; /* Размер фона */
+    background-position: center;
+}
+.chat-input {
+    display: flex;
+    justify-content: space-between; /* Распределение элементов по горизонтали */
+    align-items: center; /* Выравнивание элементов по вертикали */
+    padding: 10px;
+    position: absolute; /* Абсолютное позиционирование для chat-input */
+    bottom: 0; /* Прижимаем к нижней границе */
+    left: 0;
+    right: 0;
+}
+
+    .chat-input input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .chat-input button {
+        padding: 8px 15px;
+        border: none;
+        background-image: url("../img/Vector.png");
+        background-size: cover;
+        width: 35px;
+        height: 35px;
+        color: white;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }

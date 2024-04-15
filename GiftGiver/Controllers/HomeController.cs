@@ -10,6 +10,8 @@ using GiftGiver.Controllers;
 using Microsoft.VisualBasic;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.ObjectModel;
+using System.Text.Json;
 
 namespace GiftGiver.Controllers
 {
@@ -24,6 +26,8 @@ namespace GiftGiver.Controllers
         private readonly TapeApi _apeApi;
         private giftgiverContext db = new giftgiverContext();
 
+        public int messageCount = 0;
+
 
         public HomeController(ILogger<HomeController> logger, AuthApi apiController, giftgiverContext giftgiver, AllProductsApi allProductsApi, WishListApi wishListApi, TapeApi apeApi, AddProductApi addProductApi, RegApi regApi)
         {
@@ -36,6 +40,9 @@ namespace GiftGiver.Controllers
             _addProductApi = addProductApi;
             _regApi = regApi;
         }
+        /// <summary>
+        /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /// </summary>
         [AllowAnonymous]
         public IActionResult Authorization()
         {
@@ -117,6 +124,9 @@ namespace GiftGiver.Controllers
         {
             return View();
         }
+        /// <summary>
+        /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /// </summary>
         public class PrivateAccViewModel
         {
             public IEnumerable<Подарки> Products { get; set; }
@@ -267,21 +277,39 @@ namespace GiftGiver.Controllers
             CurrentUser.CurrentClientId = 0;
             return RedirectToAction("Authorization", "Home");
         }
-
+        /// <summary>
+        /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /// </summary>
+        private static readonly ReadOnlyDictionary<int, string> botDictionary = new ReadOnlyDictionary<int, string>(
+        new Dictionary<int, string>
+        {
+            { 1, "На какой праздник необходим подарок?" },
+            { 2, "Кому хотите подарит подарок?" },
+            { 3, "Какого возраста получатель?" }
+        }
+    );
         public IActionResult ChatBot()
         {
             return View();
         }
-        [HttpPost]
-        public ActionResult HandleMessage(string message)
+
+        [HttpPost("GetMessages")]
+        public IActionResult GetMessages()
         {
-            // Обработка полученного сообщения
+            string[] messages = new string[] { "Привет!", "Привет, как дела?" };
+            return Ok(messages);
+        }
+
+        [HttpPost("MessageCount")]
+        public IActionResult MessageCount([FromBody] JsonElement data)
+        {
+            messageCount = data.GetProperty("messageCount").GetInt32();
+            var messagesArrayBot = data.GetProperty("messages").EnumerateArray().Select(x => x.GetString()).ToList();
+            var messagesArrayUser = data.GetProperty("messagesUser").EnumerateArray().Select(x => x.GetString()).ToList();
+            // Обработка полученного количества сообщений
             // ...
 
-            // Формирование ответа
-            string response = "Ответ на ваше сообщение: " + message;
-
-            return Json(new { response });
+            return Ok(); // Можно вернуть что-то для клиента, если необходимо
         }
 
         [AllowAnonymous]

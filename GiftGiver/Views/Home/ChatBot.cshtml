@@ -4,43 +4,91 @@
 }
 <section>
     <form asp-action="ChatBot" method="post">
-        <div id="chat">
-            <!-- Отображение сообщений -->
-            <div id="messages">
-                <!-- ... -->
+        <div class="chat-container">
+            <div class="chat-messages">
+                <div class="message">
+                    <div class="avatar"></div>
+                    <div class="message-content">Привет!</div>
+                </div>
+                <div class="message their-message">
+                    <div class="message-content their">Привет, как дела?</div>
+                    <div class="avatar their-avatar"></div>
+                </div>
+                <div class="message">
+                    <div class="avatar"></div>
+                    <div class="message-content">Хорошо, спасибо!</div>
+                </div>
             </div>
-
-            <!-- Поле ввода сообщений -->
-            <input type="text" id="inputMessage" />
-
-            <!-- Кнопка отправки сообщения -->
-            <button id="sendMessage">Отправить</button>
+            <div class="chat-input">
+                <input type="text" placeholder="Введите сообщение" name="text">
+                <button id="send"></button>
+            </div>
         </div>
     </form>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        // Обработчик нажатия кнопки отправки сообщения
-        $("#sendMessage").click(function () {
-            var message = $("#inputMessage").val();
-
-            // Отправка сообщения на сервер
-            $.ajax({
-                url: "/Home/HandleMessage",
-                type: "POST",
-                data: { message: message },
-                success: function (response) {
-                    // Обработка полученного ответа
-                    var message = response.response;
-
-                    // Отображение ответа в чате
-                    $("#messages").append("<div class='message'>" + message + "</div>");
+    document.addEventListener("DOMContentLoaded", function () {
+        var messageCount = document.getElementsByClassName("message").length;
+        var messagesBot = $('.message .message-content:not(.their)').map(function () {
+            return $(this).text();
+        }).get();
+        var messagesUser = $('.message-content.their').map(function () {
+            return $(this).text();
+        }).get();
+        fetch('/MessageCount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ messageCount: messageCount, messages: messagesBot, messagesUser: messagesUser })
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Обработка успешного ответа от сервера
+                    console.log('Количество сообщений успешно отправлено на сервер');
+                } else {
+                    // Обработка ошибки
+                    console.log('Ошибка при отправке количества сообщений на сервер');
                 }
+            })
+            .catch(error => {
+                console.error('Произошла ошибка:', error);
             });
 
-            // Очистка поля ввода сообщения
-            $("#inputMessage").val("");
+
+        document.getElementById("send").addEventListener("click", function (event) {
+            event.preventDefault();
+            var chatMessages = document.querySelector(".chat-messages");
+            var inputField = document.querySelector("input[name='text']");
+            var userMessage = inputField.value;
+
+            var newTheirMessage = createMessageElement("their-message", userMessage, true);
+
+            chatMessages.appendChild(newTheirMessage);
+            scrollToBottom(chatMessages);
+
+            fetch("/GetMessages", { method: "POST", headers: { "Content-Type": "application/json" } })
+                .then(response => response.json())
+                .then(messages => {
+                    var newMyMessage = createMessageElement("message", messages[1]);
+                    chatMessages.appendChild(newMyMessage);
+                    scrollToBottom(chatMessages);
+                })
+                .catch(error => console.error("Error fetching messages:", error));
+
+            inputField.value = ""; // Clear the input field after sending the message
         });
+
+        function createMessageElement(className, content, isTheir = false) {
+            var messageElement = document.createElement("div");
+            messageElement.className = "message " + className;
+            messageElement.innerHTML = `<div class='avatar ${isTheir ? "their-avatar" : ""}'></div><div class='message-content ${isTheir ? "their" : ""}'>${content}</div>`;
+            return messageElement;
+        }
+
+        function scrollToBottom(element) {
+            element.scrollTop = element.scrollHeight;
+        }
     });
 </script>
