@@ -88,3 +88,23 @@
         border-radius: 0 5px 5px 0;
         cursor: pointer;
     }
+
+.gift {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .gift img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .gift p {
+        margin: 10px 0;
+    }
+
+    .gift .gift-link {
+        color: blue;
+        text-decoration: none;
+    }

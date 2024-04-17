@@ -6,18 +6,7 @@
     <form asp-action="ChatBot" method="post">
         <div class="chat-container">
             <div class="chat-messages">
-                <div class="message">
-                    <div class="avatar"></div>
-                    <div class="message-content">Привет!</div>
-                </div>
-                <div class="message their-message">
-                    <div class="message-content their">Привет, как дела?</div>
-                    <div class="avatar their-avatar"></div>
-                </div>
-                <div class="message">
-                    <div class="avatar"></div>
-                    <div class="message-content">Хорошо, спасибо!</div>
-                </div>
+               
             </div>
             <div class="chat-input">
                 <input type="text" placeholder="Введите сообщение" name="text">
@@ -28,67 +17,84 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var messageCount = document.getElementsByClassName("message").length;
-        var messagesBot = $('.message .message-content:not(.their)').map(function () {
-            return $(this).text();
-        }).get();
-        var messagesUser = $('.message-content.their').map(function () {
-            return $(this).text();
-        }).get();
-        fetch('/MessageCount', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ messageCount: messageCount, messages: messagesBot, messagesUser: messagesUser })
-        })
-            .then(response => {
-                if (response.ok) {
-                    // Обработка успешного ответа от сервера
-                    console.log('Количество сообщений успешно отправлено на сервер');
-                } else {
-                    // Обработка ошибки
-                    console.log('Ошибка при отправке количества сообщений на сервер');
-                }
-            })
-            .catch(error => {
-                console.error('Произошла ошибка:', error);
-            });
 
 
-        document.getElementById("send").addEventListener("click", function (event) {
-            event.preventDefault();
-            var chatMessages = document.querySelector(".chat-messages");
-            var inputField = document.querySelector("input[name='text']");
-            var userMessage = inputField.value;
 
-            var newTheirMessage = createMessageElement("their-message", userMessage, true);
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    function createMessageElement(className, content, isTheir = false) {
+        var messageElement = document.createElement("div");
+        messageElement.className = "message " + className;
+        messageElement.innerHTML = `<div class='avatar ${isTheir ? "their-avatar" : ""}'></div><div class='message-content ${isTheir ? "their" : ""}'>${content}</div>`;
+        return messageElement;
+    }
 
-            chatMessages.appendChild(newTheirMessage);
+    function scrollToBottom(element) {
+        element.scrollTop = element.scrollHeight;
+    }
+    var botDictionary = {
+        "На какой праздник необходим подарок?": "",
+        "Кому хотите подарить подарок?": "",
+        "Какого возраста получатель?": ""
+    };
+    var currentQuestionIndex = 0;
+    var questions = Object.keys(botDictionary);
+    document.getElementById("send").addEventListener("click", function (event) {
+        event.preventDefault();
+        var chatMessages = document.querySelector(".chat-messages");
+        var inputField = document.querySelector("input[name='text']");
+        var userMessage = inputField.value;
+
+        var newTheirMessage = createMessageElement("their-message", userMessage, true);
+
+                chatMessages.appendChild(newTheirMessage);
+                scrollToBottom(chatMessages);
+
+        // Если это ответ на вопрос бота, сохраняем ответ
+        if (currentQuestionIndex === questions.length && !/^\d+$/.test(userMessage)) {
+            var errorMessage = createMessageElement("message", "Ошибка: введите только цифры.");
+            chatMessages.appendChild(errorMessage);
             scrollToBottom(chatMessages);
+            return; // Не увеличиваем currentQuestionIndex и не отправляем ответы на сервер
+        }
 
-            fetch("/GetMessages", { method: "POST", headers: { "Content-Type": "application/json" } })
+        // Если это ответ на вопрос бота, сохраняем ответ
+        if (currentQuestionIndex > 0) {
+            botDictionary[questions[currentQuestionIndex - 1]] = userMessage;
+        }
+
+        // Если все вопросы были заданы, отправляем ответы на сервер и получаем подарки
+        if (currentQuestionIndex >= questions.length) {
+            fetch('/GetGifts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(botDictionary)
+            })
                 .then(response => response.json())
-                .then(messages => {
-                    var newMyMessage = createMessageElement("message", messages[1]);
-                    chatMessages.appendChild(newMyMessage);
+                .then(gifts => {
+                    var giftMessage = createMessageElement("message", gifts[0], true);
+                    chatMessages.appendChild(giftMessage);
                     scrollToBottom(chatMessages);
                 })
-                .catch(error => console.error("Error fetching messages:", error));
-
-            inputField.value = ""; // Clear the input field after sending the message
-        });
-
-        function createMessageElement(className, content, isTheir = false) {
-            var messageElement = document.createElement("div");
-            messageElement.className = "message " + className;
-            messageElement.innerHTML = `<div class='avatar ${isTheir ? "their-avatar" : ""}'></div><div class='message-content ${isTheir ? "their" : ""}'>${content}</div>`;
-            return messageElement;
+                .catch(error => {
+                    console.error('Error fetching gifts:', error);
+                });
+        } else {
+            // Задаем следующий вопрос
+            var newMyMessage = createMessageElement("message", questions[currentQuestionIndex]);
+            chatMessages.appendChild(newMyMessage);
+            scrollToBottom(chatMessages);
+            currentQuestionIndex++;
         }
 
-        function scrollToBottom(element) {
-            element.scrollTop = element.scrollHeight;
-        }
+        inputField.value = ""; // Очищаем поле ввода после отправки сообщения
     });
+    window.onload = function () {
+        var chatMessages = document.querySelector(".chat-messages");
+        var newMyMessage = createMessageElement("message", questions[currentQuestionIndex]);
+        chatMessages.appendChild(newMyMessage);
+        currentQuestionIndex++;
+    };
 </script>
+@*<img src="data:image/jpeg;base64,${base64Image}" alt="Подарок">*@

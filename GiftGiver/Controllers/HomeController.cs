@@ -280,12 +280,12 @@ namespace GiftGiver.Controllers
         /// <summary>
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
-        private static readonly ReadOnlyDictionary<int, string> botDictionary = new ReadOnlyDictionary<int, string>(
-        new Dictionary<int, string>
+        private static readonly ReadOnlyDictionary<string, string> botDictionary = new ReadOnlyDictionary<string, string>(
+        new Dictionary<string, string>
         {
-            { 1, "На какой праздник необходим подарок?" },
-            { 2, "Кому хотите подарит подарок?" },
-            { 3, "Какого возраста получатель?" }
+            { "На какой праздник необходим подарок?", "" },
+            { "Кому хотите подарит подарок?", "" },
+            { "Какого возраста получатель?", "" }
         }
     );
         public IActionResult ChatBot()
@@ -293,23 +293,36 @@ namespace GiftGiver.Controllers
             return View();
         }
 
-        [HttpPost("GetMessages")]
-        public IActionResult GetMessages()
+        //[HttpPost("GetMessages")]
+        //public IActionResult GetMessages()
+        //{
+        //    string[] messages = new string[] { "Привет!", "Привет, как дела?" };
+        //    return Ok(messages);
+        //}
+
+        //[HttpPost("MessageCount")]
+        //public IActionResult MessageCount([FromBody] JsonElement data)
+        //{
+        //    messageCount = data.GetProperty("messageCount").GetInt32();
+        //    var messagesArrayBot = data.GetProperty("messages").EnumerateArray().Select(x => x.GetString()).ToList();
+        //    var messagesArrayUser = data.GetProperty("messagesUser").EnumerateArray().Select(x => x.GetString()).ToList();
+        //    // Обработка полученного количества сообщений
+        //    // ...
+
+        //    return Ok(); // Можно вернуть что-то для клиента, если необходимо
+        //}
+        [HttpPost("GetGifts")]
+        public ActionResult GetGifts([FromBody] Dictionary<string, string> userAnswers)
         {
-            string[] messages = new string[] { "Привет!", "Привет, как дела?" };
-            return Ok(messages);
+            // Обработка ответов пользователя и получение подарков
+            var gifts = db.Подаркиs.Where(x => x.Жанр == userAnswers["На какой праздник необходим подарок?"]).ToList();
+            return Json(new { success = true, gifts = gifts }); ;
         }
 
-        [HttpPost("MessageCount")]
-        public IActionResult MessageCount([FromBody] JsonElement data)
+        private List<Подарки> GetGiftsBasedOnAnswers(Dictionary<string, string> userAnswers)
         {
-            messageCount = data.GetProperty("messageCount").GetInt32();
-            var messagesArrayBot = data.GetProperty("messages").EnumerateArray().Select(x => x.GetString()).ToList();
-            var messagesArrayUser = data.GetProperty("messagesUser").EnumerateArray().Select(x => x.GetString()).ToList();
-            // Обработка полученного количества сообщений
-            // ...
-
-            return Ok(); // Можно вернуть что-то для клиента, если необходимо
+            var gifts = db.Подаркиs.Where(x => x.Жанр == userAnswers["На какой праздник необходим подарок?"]).ToList();
+            return gifts;
         }
 
         [AllowAnonymous]
