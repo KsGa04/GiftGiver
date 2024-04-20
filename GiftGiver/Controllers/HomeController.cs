@@ -5,13 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
-using GiftGiver;
-using GiftGiver.Controllers;
-using Microsoft.VisualBasic;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.ObjectModel;
-using System.Text.Json;
 
 namespace GiftGiver.Controllers
 {
@@ -201,7 +195,7 @@ namespace GiftGiver.Controllers
 
         //    return Ok("Изображение успешно загружено");
         //}
-        //[Authorize]
+        [Authorize]
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();
@@ -280,50 +274,106 @@ namespace GiftGiver.Controllers
         /// <summary>
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
-        private static readonly ReadOnlyDictionary<string, string> botDictionary = new ReadOnlyDictionary<string, string>(
-        new Dictionary<string, string>
-        {
-            { "На какой праздник необходим подарок?", "" },
-            { "Кому хотите подарит подарок?", "" },
-            { "Какого возраста получатель?", "" }
-        }
-    );
+        
         public IActionResult ChatBot()
         {
             return View();
         }
 
-        //[HttpPost("GetMessages")]
-        //public IActionResult GetMessages()
-        //{
-        //    string[] messages = new string[] { "Привет!", "Привет, как дела?" };
-        //    return Ok(messages);
-        //}
+        public class Gift
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Link { get; set; }
+            public byte[] Image { get; set; }
+        }
 
-        //[HttpPost("MessageCount")]
-        //public IActionResult MessageCount([FromBody] JsonElement data)
-        //{
-        //    messageCount = data.GetProperty("messageCount").GetInt32();
-        //    var messagesArrayBot = data.GetProperty("messages").EnumerateArray().Select(x => x.GetString()).ToList();
-        //    var messagesArrayUser = data.GetProperty("messagesUser").EnumerateArray().Select(x => x.GetString()).ToList();
-        //    // Обработка полученного количества сообщений
-        //    // ...
+        public class GiftResponse
+        {
+            public int TotalCount { get; set; }
+            public List<Gift> Gifts { get; set; }
+        }
 
-        //    return Ok(); // Можно вернуть что-то для клиента, если необходимо
-        //}
+        private List<int> displayedGiftIds = new List<int>();
+
         [HttpPost("GetGifts")]
         public ActionResult GetGifts([FromBody] Dictionary<string, string> userAnswers)
         {
-            // Обработка ответов пользователя и получение подарков
-            var gifts = db.Подаркиs.Where(x => x.Жанр == userAnswers["На какой праздник необходим подарок?"]).ToList();
-            return Json(new { success = true, gifts = gifts }); ;
-        }
+            var recipient = userAnswers["Кому хотите подарить подарок?"];
+            var holiday = userAnswers["На какой праздник необходим подарок?"];
 
-        private List<Подарки> GetGiftsBasedOnAnswers(Dictionary<string, string> userAnswers)
-        {
-            var gifts = db.Подаркиs.Where(x => x.Жанр == userAnswers["На какой праздник необходим подарок?"]).ToList();
-            return gifts;
+            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) || x.Получатель.Contains(recipient))
+                                   .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId })
+                                   .ToList();
+
+            var uniqueGifts = gifts.Where(g => !displayedGiftIds.Contains(g.Id)).ToList();
+
+            if (uniqueGifts.Count > 3)
+            {
+                var random = new Random();
+                var selectedGifts = uniqueGifts.OrderBy(x => random.Next()).Take(3).ToList();
+                var response = new GiftResponse
+                {
+                    TotalCount = uniqueGifts.Count,
+                    Gifts = selectedGifts
+                };
+
+                displayedGiftIds.AddRange(selectedGifts.Select(g => g.Id));
+
+                return Ok(response);
+            }
+            else
+            {
+                var response = new GiftResponse
+                {
+                    TotalCount = uniqueGifts.Count,
+                    Gifts = uniqueGifts
+                };
+                return Ok(response);
+            }
         }
+        [HttpPost]
+        public ActionResult AddBotWish(string name, string image, string link)
+        {
+            // Ваша логика добавления подарка в список желаний бота
+            // Например, сохранение в базу данных или другие действия
+
+            try
+            {
+                // Пример сохранения данных в базу данных
+                if (CurrentUser.CurrentClientId != 0)
+                {
+                    var byteImage = Convert.FromBase64String(image);
+                    var подарок = db.Подаркиs.Where(x => x.Наименование == name && x.Ссылка == link && x.Изображение == byteImage).FirstOrDefault();
+                    var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).ToList();
+                    var ужеЖелаемый = желаемое.Any(ж => ж.ПодаркиId == подарок.ПодаркиId);
+
+                    if (ужеЖелаемый)
+                    {
+                        return Json(new { success = false });
+                    }
+                    else
+                    {
+                        //var wish = _wishListApi.AddWish(CurrentUser.CurrentClientId, подарок.ПодаркиId);
+                        //var tape = _apeApi.FormattingAdd(CurrentUser.CurrentClientId, подарок.ПодаркиId);
+                        return Json(new { success = true });
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Authorization", "Home");
+                }
+
+                return Json(new { success = true, message = "Подарок успешно добавлен в список желаний бота." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Ошибка при добавлении подарка: " + ex.Message });
+            }
+        }
+        /// <summary>
+        /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        /// </summary>
 
         [AllowAnonymous]
             public IActionResult Privacy()

@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.Swagger.Annotations;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using Swashbuckle.AspNetCore.Annotations;
+using SwaggerResponseAttribute = Swashbuckle.AspNetCore.Annotations.SwaggerResponseAttribute;
 
 namespace GiftGiver.Controllers
 {
@@ -36,8 +39,11 @@ namespace GiftGiver.Controllers
                 return Ok(ListProduct);
             }
         }
+
         [HttpPut]
         [Route("/IdProduct/update")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Успешное выполнение", typeof(Подарки))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Элемент не найден")]
         public async Task<ActionResult<Подарки>> Update(int id, int minAge,  string giver, string genre)
         {
             var ListProduct = db.Подаркиs.Where(r => r.ПодаркиId == id).FirstOrDefault();
@@ -49,7 +55,7 @@ namespace GiftGiver.Controllers
             {
                 ListProduct.МинВозраст = minAge;
                 ListProduct.Получатель = giver;
-                ListProduct.Жанр = genre;
+                ListProduct.Жанр = genre.ToString();
                 db.SaveChanges();
                 ListProduct = db.Подаркиs.Where(r => r.ПодаркиId == id).FirstOrDefault();
                 return Ok(ListProduct);
