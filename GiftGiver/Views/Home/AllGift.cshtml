@@ -70,28 +70,28 @@
     //    });
     //});
 
-    document.addEventListener("DOMContentLoaded", function (event) {
-        var images = document.querySelectorAll('.grid-item-allproducts img');
-        images.forEach(function (image) {
-            var overlay = document.createElement('div');
-            overlay.classList.add('image-overlay');
-            image.parentNode.appendChild(overlay);
+    //document.addEventListener("DOMContentLoaded", function (event) {
+    //    var images = document.querySelectorAll('.grid-item-allproducts img');
+    //    images.forEach(function (image) {
+    //        var overlay = document.createElement('div');
+    //        overlay.classList.add('image-overlay');
+    //        image.parentNode.appendChild(overlay);
 
-            image.addEventListener('mouseover', function () {
-                overlay.style.display = 'block';
-                // Тут можно также показать кнопку "Добавить"
-                var addButton = image.parentNode.querySelector('.wish-btn');
-                addButton.style.display = 'block';
-            });
+    //        image.addEventListener('mouseover', function () {
+    //            overlay.style.display = 'block';
+    //            // Тут можно также показать кнопку "Добавить"
+    //            var addButton = image.parentNode.querySelector('.wish-btn');
+    //            addButton.style.display = 'block';
+    //        });
 
-            image.addEventListener('mouseout', function () {
-                overlay.style.display = 'none';
-                // Тут можно также скрыть кнопку "Добавить"
-                var addButton = image.parentNode.querySelector('.wish-btn');
-                addButton.style.display = 'none';
-            });
-        });
-    });
+    //        image.addEventListener('mouseout', function () {
+    //            overlay.style.display = 'none';
+    //            // Тут можно также скрыть кнопку "Добавить"
+    //            var addButton = image.parentNode.querySelector('.wish-btn');
+    //            addButton.style.display = 'none';
+    //        });
+    //    });
+    //});
     //$(document).ready(function () {
     //    $('#search-button').click(function () {
     //        $.ajax({

@@ -42,5 +42,29 @@ namespace GiftGiver.Controllers
             return Ok(желаемое);
 
         }
+
+        [HttpGet("get-similar-gifts")]
+        public async Task<ActionResult<IEnumerable<SimilarGiftResponse>>> GetSimilarGifts(int id_user)
+        {
+            var similarGifts = await db.Желаемоеs
+                .Where(w => w.Пользователь.ПользовательId != id_user)
+                .Where(w => w.Подарки.Наименование.Contains(db.Желаемоеs.Where(x => x.ПользовательId == id_user).Select(x => x.Подарки.Наименование).FirstOrDefault() ?? ""))
+                .Select(s => new SimilarGiftResponse
+                {
+                    ПользовательId = s.ПользовательId,
+                    ПодаркиId = s.ПодаркиId,
+                    Название = s.Подарки.Наименование
+                })
+                .ToListAsync();
+
+            return Ok(similarGifts);
+        }
+
+        public class SimilarGiftResponse
+        {
+            public int ПользовательId { get; set; }
+            public int ПодаркиId { get; set; }
+            public string Название { get; set; }
+        }
     }
 }

@@ -217,19 +217,34 @@ namespace GiftGiver.Controllers
         public IActionResult AllGift(string find)
         {
             var productList = new List<Подарки>();
+            var result = _allProductsApi.GetAll();
             if (find != null)
             {
                 productList = db.Подаркиs.Where(x => x.Наименование.Contains(find)).ToList();
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = productList
+                };
+                return View(viewModel);
             }
             else
             {
-                productList = db.Подаркиs.ToList();
+                if (CurrentUser.CurrentClientId != 0)
+                {
+                    result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
+                }
+                else
+                {
+                    result = _allProductsApi.GetAll();
+                }
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = result.Value
+                };
+                return View(viewModel);
             }
-            var viewModel = new PrivateAccViewModel
-            {
-                Products = productList
-            };
-            return View(viewModel);
+            
+            
         }
         [HttpPost]
         public ActionResult ДобавитьЖелаемое(int подарокId)
@@ -300,7 +315,7 @@ namespace GiftGiver.Controllers
         public ActionResult GetGifts([FromBody] Dictionary<string, string> userAnswers)
         {
             var recipient = userAnswers["Кому хотите подарить подарок?"];
-            var holiday = userAnswers["На какой праздник необходим подарок?"];
+            var holiday = userAnswers["Какой категории вам необходим подарок?"];
 
             var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) || x.Получатель.Contains(recipient))
                                    .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId })
@@ -330,45 +345,6 @@ namespace GiftGiver.Controllers
                     Gifts = uniqueGifts
                 };
                 return Ok(response);
-            }
-        }
-        [HttpPost]
-        public ActionResult AddBotWish(string name, string image, string link)
-        {
-            // Ваша логика добавления подарка в список желаний бота
-            // Например, сохранение в базу данных или другие действия
-
-            try
-            {
-                // Пример сохранения данных в базу данных
-                if (CurrentUser.CurrentClientId != 0)
-                {
-                    var byteImage = Convert.FromBase64String(image);
-                    var подарок = db.Подаркиs.Where(x => x.Наименование == name && x.Ссылка == link && x.Изображение == byteImage).FirstOrDefault();
-                    var желаемое = db.Желаемоеs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).ToList();
-                    var ужеЖелаемый = желаемое.Any(ж => ж.ПодаркиId == подарок.ПодаркиId);
-
-                    if (ужеЖелаемый)
-                    {
-                        return Json(new { success = false });
-                    }
-                    else
-                    {
-                        //var wish = _wishListApi.AddWish(CurrentUser.CurrentClientId, подарок.ПодаркиId);
-                        //var tape = _apeApi.FormattingAdd(CurrentUser.CurrentClientId, подарок.ПодаркиId);
-                        return Json(new { success = true });
-                    }
-                }
-                else
-                {
-                    return RedirectToAction("Authorization", "Home");
-                }
-
-                return Json(new { success = true, message = "Подарок успешно добавлен в список желаний бота." });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Ошибка при добавлении подарка: " + ex.Message });
             }
         }
         /// <summary>
