@@ -84,25 +84,33 @@ namespace GiftGiver.Controllers
             var giftsFromFeed = db.Лентаs.Where(лента => лента.ПользовательId == id)
                                          .Select(лента => лента.ПодаркиId)
                                          .ToList();
-
-            var similarGifts = new List<Подарки>();
-
-            foreach (var giftId in giftsFromFeed)
+            if (giftsFromFeed.Count != 0)
             {
-                var gift = db.Подаркиs.FirstOrDefault(подарок => подарок.ПодаркиId == giftId);
-                if (gift != null)
+                var similarGifts = new List<Подарки>();
+
+                foreach (var giftId in giftsFromFeed)
                 {
-                    var words = gift.Наименование.Split(' '); // разбиваем название подарка на слова
-                    foreach (var word in words)
+                    var gift = db.Подаркиs.FirstOrDefault(подарок => подарок.ПодаркиId == giftId);
+                    if (gift != null)
                     {
-                        var similarGiftsForWord = db.Подаркиs.Where(подарок => подарок.Наименование.Contains(word) && подарок.ПодаркиId != giftId)
-                                                             .ToList();
-                        similarGifts.AddRange(similarGiftsForWord);
+                        var words = gift.Наименование.Split(' '); // разбиваем название подарка на слова
+                        foreach (var word in words)
+                        {
+                            var similarGiftsForWord = db.Подаркиs.Where(подарок => подарок.Наименование.Contains(word) && подарок.ПодаркиId != giftId)
+                                                                 .ToList();
+                            similarGifts.AddRange(similarGiftsForWord);
+                        }
                     }
                 }
-            }
 
-            return similarGifts.Distinct().ToList(); // возвращаем уникальные подарки
+                return similarGifts.Distinct().ToList(); // возвращаем уникальные подарки
+            }
+            else
+            {
+                var result = db.Подаркиs.ToList();
+                return result;
+            }
+            
         }
     }
 }

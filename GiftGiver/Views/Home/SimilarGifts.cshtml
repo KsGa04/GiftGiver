@@ -1,5 +1,31 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using static GiftGiver.Controllers.HomeController;
 @{
+    Layout = "_Layout";
+    ViewData["Title"] = "Лента подарков";
 }
+@model PrivateAccViewModel
+<section>
+    <form asp-action="AllGift" method="post">
+        <div class="search-container">
+            <p id="title_similar">Похожие подарки</p>
+        </div>
+        <div class="slider-container-allproducts">
+            <div class="grid-container-allproducts">
+                @foreach (var подарок in Model.Products)
+                {
+                    if (подарок != null)
+                    {
+                        <div class="grid-item-allproducts">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(подарок.Изображение)">
+                            <p class="grid-cell-name">@подарок.Наименование</p>
+                            <a href="@подарок.Ссылка" class="btn btn-primary" id="link">Перейти</a>
+                            <a class="btn btn-primary wish-btn" id="wish" data-подарокid="@подарок.ПодаркиId">Добавить</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </form>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/js/similar.js"></script>

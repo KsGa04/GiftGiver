@@ -199,14 +199,7 @@ namespace GiftGiver.Controllers
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();
-            if (CurrentUser.CurrentClientId != 0)
-            {
-                result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
-            }
-            else
-            {
                 result = _allProductsApi.GetAll();
-            }
             var viewModel = new PrivateAccViewModel
             {
                 Products = result.Value
@@ -229,14 +222,7 @@ namespace GiftGiver.Controllers
             }
             else
             {
-                if (CurrentUser.CurrentClientId != 0)
-                {
-                    result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
-                }
-                else
-                {
                     result = _allProductsApi.GetAll();
-                }
                 var viewModel = new PrivateAccViewModel
                 {
                     Products = result.Value
@@ -290,6 +276,7 @@ namespace GiftGiver.Controllers
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
         
+
         public IActionResult ChatBot()
         {
             return View();
@@ -350,6 +337,24 @@ namespace GiftGiver.Controllers
         /// <summary>
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
+        [Authorize]
+        public IActionResult SimilarGifts()
+        {
+            var result = _allProductsApi.GetAll();
+            if (CurrentUser.CurrentClientId != 0)
+            {
+                result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
+            }
+            else
+            {
+                result = _allProductsApi.GetAll();
+            }
+            var viewModel = new PrivateAccViewModel
+            {
+                Products = result.Value
+            };
+            return View(viewModel);
+        }
 
         [AllowAnonymous]
             public IActionResult Privacy()
