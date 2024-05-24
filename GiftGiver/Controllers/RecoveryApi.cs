@@ -1,70 +1,67 @@
 ﻿using GiftGiver.Models;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Net.Mail;
+using MimeKit;
+using MailKit.Net.Smtp;
+using System.Threading.Tasks;
 
 
 namespace GiftGiver.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
-    public class RecoveryApi : Controller
+    [Route("api/[controller]")]
+    public class EmailController : ControllerBase
     {
-        // GET: HomeController
-        public SuccessResponse result;
+        private readonly IEmailService _emailService;
 
-        [HttpPost]
-        [Route("sendcode")]
-        public SuccessResponse SendCode([FromBody] EmailParams emailParams, string login)
+        public EmailController(IEmailService emailService)
         {
-            try
-            {
-                var fromAddress = new MailAddress("kseniagaranceva@gmail.com", "Admin");
-                var toAddress = new MailAddress(emailParams.ToEmail, "Recipient Name");
-                const string fromPassword = "Arthur3007!";
-                const string subject = "Verification Code";
-                string body = "Your verification code is: " + emailParams.VerificationCode;
-
-                var smtp = new SmtpClient
-                {
-                    Host = "smtp.gmail.com", // Используйте нужный SMTP-сервер
-                    Port = 465,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
-                };
-
-                using (var message = new MailMessage(fromAddress, toAddress)
-                {
-                    Subject = subject,
-                    Body = body
-                })
-                {
-                    smtp.SendMailAsync(message);
-                }
-
-                result = new SuccessResponse
-                {
-                    Success = true,
-                    Message = "Код был отправлен",
-                };
-                return result;
-            }
-            catch (Exception ex)
-            {
-                result = new SuccessResponse
-                {
-                    Success = true,
-                    Message = ex.Message,
-                };
-                return result;
-            }
+            _emailService = emailService;
         }
-        public class EmailParams
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendEmail([FromBody] EmailRequest request)
         {
-            public string ToEmail { get; set; }
-            public string VerificationCode { get; set; }
+            await _emailService.SendCode(request.Email, request.Subject, request.Message);
+            return Ok();
+        }
+    }
+
+    public class EmailRequest
+    {
+        public string Email { get; set; }
+        public string Subject { get; set; }
+        public string Message { get; set; }
+    }
+
+    public interface IEmailService
+    {
+        Task SendCode(string email, string subject, string message);
+    }
+
+    public class EmailService : IEmailService
+    {
+        public async Task SendCode(string email, string subject, string message)
+        {
+            using var emailMessage = new MimeMessage();
+
+            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "ksga04@mail.ru"));
+            emailMessage.To.Add(new MailboxAddress("", email));
+            emailMessage.Subject = subject;
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = message
+            };
+
+            using (var client = new SmtpClient())
+            {
+                await client.ConnectAsync("smtp.mail.ru", 465, false);
+                await client.AuthenticateAsync("ksga04@mail.ru", "German140521");
+                await client.SendAsync(emailMessage);
+                await client.DisconnectAsync(true);
+            }
         }
     }
 }

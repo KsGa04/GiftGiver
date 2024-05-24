@@ -3,7 +3,7 @@
     Layout = "_Layout";
     ViewData["Title"] = "Лента подарков";
 }
-@model PrivateAccViewModel
+@model ListSimilar
 <section>
     <form asp-action="AllGift" method="post">
         <div class="search-container">
@@ -18,6 +18,9 @@
                         <div class="grid-item-allproducts">
                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(подарок.Изображение)">
                             <p class="grid-cell-name">@подарок.Наименование</p>
+                            <p class="grid-cell-count">@подарок.Цена ₽</p>
+                            <p class="grid-cell-login">Пользователь: @подарок.Логин</p>
+                            
                             <a href="@подарок.Ссылка" class="btn btn-primary" id="link">Перейти</a>
                             <a class="btn btn-primary wish-btn" id="wish" data-подарокid="@подарок.ПодаркиId">Добавить</a>
                         </div>

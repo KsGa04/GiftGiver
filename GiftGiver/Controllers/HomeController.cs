@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace GiftGiver.Controllers
 {
@@ -199,7 +200,14 @@ namespace GiftGiver.Controllers
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();
+            if (CurrentUser.CurrentClientId != 0)
+            {
+                result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
+            }
+            else
+            {
                 result = _allProductsApi.GetAll();
+            }
             var viewModel = new PrivateAccViewModel
             {
                 Products = result.Value
@@ -337,23 +345,36 @@ namespace GiftGiver.Controllers
         /// <summary>
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
+        public class Similar
+        {
+            public string Наименование { get; set; }
+            public byte[] Изображение { get; set; }
+            public string Ссылка { get; set; }
+            public int ПодаркиId { get; set; }
+            public string Логин { get; set; }
+            public int Цена { get; set; }
+        }
+        public class ListSimilar
+        {
+            public IEnumerable<Similar> Products { get; set; }
+        }
         [Authorize]
         public IActionResult SimilarGifts()
         {
-            var result = _allProductsApi.GetAll();
-            if (CurrentUser.CurrentClientId != 0)
+            // Получаем ID текущего пользователя
+            var currentUserId = CurrentUser.CurrentClientId;
+
+            // Получаем список похожих подарков для текущего пользователя
+            var products = _allProductsApi.GetUsersProductById(currentUserId).Value;
+
+            // Создаем модель
+            var model = new ListSimilar
             {
-                result = _allProductsApi.GetAllById(CurrentUser.CurrentClientId);
-            }
-            else
-            {
-                result = _allProductsApi.GetAll();
-            }
-            var viewModel = new PrivateAccViewModel
-            {
-                Products = result.Value
+                Products = products
             };
-            return View(viewModel);
+
+            // Возвращаем представление с моделью
+            return View(model);
         }
 
         [AllowAnonymous]
@@ -367,5 +388,6 @@ namespace GiftGiver.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

@@ -19,6 +19,7 @@
                 <div class="grid-item-allproducts">
                     <img src="data:image/jpeg;base64,@Convert.ToBase64String(подарок.Изображение)">
                     <p class="grid-cell-name">@подарок.Наименование</p>
+                            <p class="grid-cell-count">@подарок.Цена.ToString("N0") ₽</p>
                     <a href="@подарок.Ссылка" class="btn btn-primary" id="link">Перейти</a>
                     <a class="btn btn-primary wish-btn" id="wish" data-подарокid="@подарок.ПодаркиId">Добавить</a>
                 </div>

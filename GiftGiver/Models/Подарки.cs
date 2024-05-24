@@ -22,5 +22,6 @@ namespace GiftGiver
 
         public virtual ICollection<Желаемое> Желаемоеs { get; set; }
         public virtual ICollection<Лента> Лентаs { get; set; }
+
     }
 }

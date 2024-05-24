@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using Swashbuckle.AspNetCore.Annotations;
 using SwaggerResponseAttribute = Swashbuckle.AspNetCore.Annotations.SwaggerResponseAttribute;
+using static GiftGiver.Controllers.HomeController;
 
 namespace GiftGiver.Controllers
 {
@@ -111,6 +112,55 @@ namespace GiftGiver.Controllers
                 return result;
             }
             
+        }
+        [HttpGet]
+        [Route("/usersproducts/{id}")]
+        public ActionResult<IEnumerable<Similar>> GetUsersProductById(int id)
+        {
+            var giftsFromFeed = db.Лентаs.Where(лента => лента.ПользовательId == id)
+                                     .Select(лента => лента.ПодаркиId)
+                                     .ToList();
+
+            if (giftsFromFeed.Count != 0)
+            {
+                var similarGifts = new Dictionary<int, Similar>();
+
+                foreach (var giftId in giftsFromFeed)
+                {
+                    var gift = db.Подаркиs.FirstOrDefault(подарок => подарок.ПодаркиId == giftId);
+                    if (gift != null)
+                    {
+                        var words = gift.Наименование.Split(' ');
+                        foreach (var word in words)
+                        {
+                            var similarGiftsForWord = db.Желаемоеs.Where(желаемое => желаемое.Пользователь.ПользовательId != id && желаемое.Подарки.Наименование.Contains(word) && желаемое.Подарки.ПодаркиId != giftId)
+                                                                 .Select(желаемое => new Similar
+                                                                 {
+                                                                     Наименование = желаемое.Подарки.Наименование,
+                                                                     Изображение = желаемое.Подарки.Изображение,
+                                                                     Ссылка = желаемое.Подарки.Ссылка,
+                                                                     ПодаркиId = желаемое.Подарки.ПодаркиId,
+                                                                     Логин = желаемое.Пользователь.Логин,
+                                                                     Цена = (int)желаемое.Подарки.Цена
+                                                                 })
+                                                                 .ToList();
+
+                            foreach (var similar in similarGiftsForWord)
+                            {
+                                if (!similarGifts.ContainsKey(similar.ПодаркиId))
+                                {
+                                    similarGifts.Add(similar.ПодаркиId, similar);
+                                }
+                            }
+                        }
+                    }
+                }
+                return new List<Similar>(similarGifts.Values);
+            }
+            else
+            {
+                return new List<Similar>();
+            }
         }
     }
 }

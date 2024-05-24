@@ -15,6 +15,7 @@ builder.Services.AddTransient<WishListApi>();
 builder.Services.AddTransient<TapeApi>();
 builder.Services.AddTransient<RegApi>();
 builder.Services.AddTransient<AddProductApi>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
