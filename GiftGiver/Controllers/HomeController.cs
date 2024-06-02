@@ -58,6 +58,10 @@ namespace GiftGiver.Controllers
 
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
+                Пользователь пользователь = db.Пользовательs.Where(c => (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password).FirstOrDefault();
+                пользователь.КоличествоПосещений += 1;
+                пользователь.ДатаПосещения = DateTime.Now;
+                db.SaveChanges();
                 var result = new SuccessResponse
                 {
                     Success = true,
@@ -78,7 +82,8 @@ namespace GiftGiver.Controllers
                     Success = true,
                     Message = "Авторизация успешна",
                 };
-                return Redirect("/swagger/index.html");
+                //return Redirect("/swagger/index.html");
+                return RedirectToAction("AdminPanel", "Home");
             }
             else
             {
@@ -168,34 +173,44 @@ namespace GiftGiver.Controllers
             };
             return View(viewModel);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> ChangeImage(IFormFile file)
-        //{
-        //    if (file == null || file.Length == 0)
-        //    {
-        //        return BadRequest("Файл не выбран");
-        //    }
+        [Authorize]
+        public IActionResult AdminPanel()
+        {
+            var result = _allProductsApi.GetAll();
+            var viewModel = new PrivateAccViewModel
+            {
+                Products = result.Value
+            };
+            return View(viewModel);
+        }
+        [HttpPost]
+        public IActionResult AdminPanel(string link)
+        {
+            var productList = new List<Подарки>();
+            var result = _allProductsApi.GetAll();
+            if (link != null)
+            {
+                var addproduct = _addProductApi.AddWBProduct(link);
+                Task.Delay(2000);
+                result = _allProductsApi.GetAll();
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = result.Value
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                result = _allProductsApi.GetAll();
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = result.Value
+                };
+                return View(viewModel);
+            }
 
-        //    var allowedExtensions = new[] { ".png", ".jpeg", ".jpg" };
-        //    var ext = Path.GetExtension(file.FileName).ToLower();
-        //    if (!allowedExtensions.Contains(ext))
-        //    {
-        //        return BadRequest("Неверный формат файла. Выберите изображение в формате .png, .jpeg или .jpg");
-        //    }
 
-        //    var filePath = Path.Combine(
-        //        Directory.GetCurrentDirectory(), "wwwroot", "images", "userImage",
-        //        "newImage" + ext);
-
-        //    using (var stream = new FileStream(filePath, FileMode.Create))
-        //    {
-        //        await file.CopyToAsync(stream);
-        //    }
-
-        //    // Теперь сохраните путь к загруженному изображению в базе данных или отправьте его на фронт-энд для отображения
-
-        //    return Ok("Изображение успешно загружено");
-        //}
+        }
         [Authorize]
         public IActionResult AllGift()
         {
@@ -296,6 +311,7 @@ namespace GiftGiver.Controllers
             public string Name { get; set; }
             public string Link { get; set; }
             public byte[] Image { get; set; }
+            public decimal Count { get; set; }
         }
 
         public class GiftResponse
@@ -312,8 +328,8 @@ namespace GiftGiver.Controllers
             var recipient = userAnswers["Кому хотите подарить подарок?"];
             var holiday = userAnswers["Какой категории вам необходим подарок?"];
 
-            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) || x.Получатель.Contains(recipient))
-                                   .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId })
+            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) && (x.Получатель.Contains(recipient) || x.Получатель.Contains("Все")))
+                                   .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId, Count = x.Цена })
                                    .ToList();
 
             var uniqueGifts = gifts.Where(g => !displayedGiftIds.Contains(g.Id)).ToList();

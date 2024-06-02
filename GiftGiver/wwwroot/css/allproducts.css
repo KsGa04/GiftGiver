@@ -21,7 +21,7 @@
 
 .grid-item-allproducts {
     text-align: center; /* выравнивание изображений по центру */
-    height: 230px;
+    height: 270px;
     width: 130px;
     position: relative;
 }
@@ -105,6 +105,16 @@
     border-radius: 9px;
     overflow: hidden;
 }
+#delete {
+    margin-top: 5px;
+    height: 30px;
+    width: 100px;
+    position: relative;
+    font-size: 12px;
+    background: rgba(126,107,196,1);
+    border-radius: 9px;
+    overflow: hidden;
+}
 
 .grid-item-allproducts img {
     border-radius: 6px; /* задаем радиус закругления */
@@ -119,3 +129,10 @@
         opacity: 0.7; /* устанавливаем требуемую прозрачность при наведении курсора */
         filter: brightness(70%); /* добавляем эффект затемнения */
     }
+
+
+
+#adminAllProducts {
+    height:70%;
+
+}

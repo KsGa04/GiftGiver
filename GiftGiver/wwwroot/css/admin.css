@@ -1,0 +1,125 @@
+﻿.gift-block {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    width:100%;
+    position:relative;
+}
+
+    .gift-block img {
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: contain;
+    }
+
+    .gift-block h4 {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    .gift-block p {
+        font-size: 12px;
+        margin-bottom: 0;
+    }
+
+    .gift-block .btn {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    .gift-block .row {
+        display: flex;
+        width:100%;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .gift-block .row > div {
+            flex: 1;
+            text-align: center;
+        }
+
+            .gift-block .row > div:first-child {
+                text-align: left;
+            }
+
+            .gift-block .row > div:last-child {
+                text-align: right;
+            }
+.slider-container-allproducts {
+    display: flex;
+    justify-content: space-between;
+}
+
+#adminAllProducts {
+    width: 60%;
+    height: 90vh;
+    overflow-y: auto;
+}
+
+.col-md-6:last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+.statistics-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.statistics-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.statistics-result {
+    margin-left: 20px;
+}
+
+.btn {
+    margin-right: 10px;
+    width: 200px;
+    height: 30px;
+    background: rgba(126, 107, 196, 1);
+    opacity: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: Manrope;
+    font-weight: Bold;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1);
+}
+button {
+    margin-right: 10px;
+    width: 200px;
+    height: 30px;
+    background: rgba(126, 107, 196, 1);
+    opacity: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: Manrope;
+    font-weight: Bold;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 1);
+}
+#delete {
+    margin-top: 5px;
+    height: 30px;
+    width: 100px;
+    position: relative;
+    font-size: 12px;
+    background: rgba(126,107,196,1);
+    border-radius: 9px;
+    overflow: hidden;
+}

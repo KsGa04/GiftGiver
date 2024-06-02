@@ -1,11 +1,11 @@
 ﻿@using static GiftGiver.Controllers.HomeController;
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Лента подарков";
+    ViewData["Title"] = "Похожие подарки";
 }
 @model ListSimilar
 <section>
-    <form asp-action="AllGift" method="post">
+    <form asp-action="SimilarGifts" method="post">
         <div class="search-container">
             <p id="title_similar">Похожие подарки</p>
         </div>

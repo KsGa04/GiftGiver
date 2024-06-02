@@ -51,7 +51,8 @@ namespace GiftGiver.Controllers
                     Email = email,
                     Пароль = password,
                     РолиId = 1,
-                    Фио = fio
+                    Фио = fio,
+                    КоличествоПосещений = 0
                 };
                 db.Пользовательs.Add(пользователь);
                 db.SaveChanges();

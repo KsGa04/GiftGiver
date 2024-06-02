@@ -119,6 +119,13 @@
         text-align: center;
         height:80px;
     }
+.gift .count{
+    margin: 5px 0;
+    word-wrap: break-word;
+    width: 150px;
+    text-align: center;
+    height: 20px;
+}
 
 .gift .gift-link {
     color: #7E6BC4;

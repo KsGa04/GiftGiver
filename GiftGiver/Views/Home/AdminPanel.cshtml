@@ -1,0 +1,80 @@
+﻿@using static GiftGiver.Controllers.HomeController;
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Админ панель";
+}
+@model PrivateAccViewModel
+<link rel="stylesheet" href="/css/admin.css" asp-append-version="true" />
+<section>
+    <form asp-action="AdminPanel" method="post">
+        <div class="slider-container-allproducts">
+            <div class="col-md-6" id="adminAllProducts">
+                @foreach (var gift in Model.Products)
+                {
+                    <div class="gift-block">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(gift.Изображение)" class="img-fluid" />
+                            </div>
+                            <div class="col-md-3">
+                                <h4>@gift.Наименование</h4>
+                            </div>
+                            <div class="col-md-3">
+                                <p>@gift.Цена.ToString("N0") ₽</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>@gift.Получатель</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>@gift.Жанр</p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="@gift.Ссылка" class="btn btn-primary" id="link">Перейти</a>
+                                <a class="btn btn-primary delete" id="delete" data-id="@gift.ПодаркиId">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6">
+                <div class="d-flex mb-3">
+                    <button class="btn btn-primary" type="button" id="apiButton">Контент API</button>
+                </div>
+                <div class="statistics-container">
+                    <div class="statistics-row">
+                        <button class="btn" type="button" id="updateStatisticsButton">Обновить статистику</button>
+                        <div id="statisticsResult"></div>
+                    </div>
+                    <div class="statistics-row">
+                        <button class="btn" type="button" id="getUserVisitsButton">Получить количество посещений</button>
+                        <div id="visitsResult"></div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+</section>
+<script src="/js/admin.js"></script>
+<script>
+    document.querySelectorAll('.delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+            var подарокId = this.getAttribute('data-id');
+            fetch("/IdProduct/delete?id=" + подарокId, {
+                method: "DELETE"
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        // Обновляем страницу или выполняем другие действия после успешного удаления
+                        location.reload();
+                    } else {
+                        // Обрабатываем ошибку удаления
+                        alert("Ошибка при удалении подарка.");
+                    }
+                })
+                .catch(function (error) {
+                    // Обрабатываем ошибку запроса
+                    alert("Произошла ошибка: " + error);
+                });
+        });
+    });
+</script>

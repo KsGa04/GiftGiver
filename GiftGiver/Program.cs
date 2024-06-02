@@ -15,7 +15,6 @@ builder.Services.AddTransient<WishListApi>();
 builder.Services.AddTransient<TapeApi>();
 builder.Services.AddTransient<RegApi>();
 builder.Services.AddTransient<AddProductApi>();
-builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
@@ -38,7 +37,10 @@ if (!app.Environment.IsDevelopment())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    });
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();

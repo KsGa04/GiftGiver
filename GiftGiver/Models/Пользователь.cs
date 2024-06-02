@@ -19,6 +19,7 @@ namespace GiftGiver
         public byte[]? Изображение { get; set; }
         public DateTime? Возраст { get; set; }
         public DateTime? ДатаПосещения { get; set; }
+        public int? КоличествоПосещений { get; set; }
         public int РолиId { get; set; }
 
         public virtual Роли Роли { get; set; } = null!;

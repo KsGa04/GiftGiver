@@ -113,54 +113,58 @@ namespace GiftGiver.Controllers
             }
             
         }
+
         [HttpGet]
         [Route("/usersproducts/{id}")]
         public ActionResult<IEnumerable<Similar>> GetUsersProductById(int id)
         {
-            var giftsFromFeed = db.Лентаs.Where(лента => лента.ПользовательId == id)
-                                     .Select(лента => лента.ПодаркиId)
-                                     .ToList();
+            var userWishlist = db.Желаемоеs.Where(w => w.Пользователь.ПользовательId == id)
+                                   .Select(w => new
+                                   {
+                                       Наименование = w.Подарки.Наименование,
+                                       Жанр = w.Подарки.Жанр,
+                                       Получатель = w.Подарки.Получатель,
+                                       ПодаркиId = w.Подарки.ПодаркиId
+                                   })
+                                   .ToList();
+         
 
-            if (giftsFromFeed.Count != 0)
+            var similarProducts = new Dictionary<int, Similar>();
+
+            foreach (var product in userWishlist)
             {
-                var similarGifts = new Dictionary<int, Similar>();
-
-                foreach (var giftId in giftsFromFeed)
+                foreach (var genre in product.Жанр.Split(";"))
                 {
-                    var gift = db.Подаркиs.FirstOrDefault(подарок => подарок.ПодаркиId == giftId);
-                    if (gift != null)
+                    foreach (var recipient in product.Получатель.Split(";"))
                     {
-                        var words = gift.Наименование.Split(' ');
-                        foreach (var word in words)
-                        {
-                            var similarGiftsForWord = db.Желаемоеs.Where(желаемое => желаемое.Пользователь.ПользовательId != id && желаемое.Подарки.Наименование.Contains(word) && желаемое.Подарки.ПодаркиId != giftId)
-                                                                 .Select(желаемое => new Similar
-                                                                 {
-                                                                     Наименование = желаемое.Подарки.Наименование,
-                                                                     Изображение = желаемое.Подарки.Изображение,
-                                                                     Ссылка = желаемое.Подарки.Ссылка,
-                                                                     ПодаркиId = желаемое.Подарки.ПодаркиId,
-                                                                     Логин = желаемое.Пользователь.Логин,
-                                                                     Цена = (int)желаемое.Подарки.Цена
-                                                                 })
-                                                                 .ToList();
+                        var similarProductsForProduct = db.Желаемоеs.Where(w => w.Пользователь.ПользовательId != id &&
+                                                         (w.Подарки.Наименование.Contains(product.Наименование) ||
+                                                          w.Подарки.Жанр.Contains(genre.Trim()) ||
+                                                          w.Подарки.Получатель.Contains(recipient.Trim())) &&
+                                                         w.Подарки.ПодаркиId != product.ПодаркиId)
+                                                     .Select(w => new Similar
+                                                     {
+                                                         Наименование = w.Подарки.Наименование,
+                                                         Изображение = w.Подарки.Изображение,
+                                                         Ссылка = w.Подарки.Ссылка,
+                                                         ПодаркиId = w.Подарки.ПодаркиId,
+                                                         Логин = w.Пользователь.Логин,
+                                                         Цена = (int)w.Подарки.Цена
+                                                     })
+                                                     .ToList();
 
-                            foreach (var similar in similarGiftsForWord)
+                        foreach (var similar in similarProductsForProduct)
+                        {
+                            if (!similarProducts.ContainsKey(similar.ПодаркиId))
                             {
-                                if (!similarGifts.ContainsKey(similar.ПодаркиId))
-                                {
-                                    similarGifts.Add(similar.ПодаркиId, similar);
-                                }
+                                similarProducts.Add(similar.ПодаркиId, similar);
                             }
                         }
                     }
                 }
-                return new List<Similar>(similarGifts.Values);
             }
-            else
-            {
-                return new List<Similar>();
-            }
+
+            return new List<Similar>(similarProducts.Values);
         }
     }
 }

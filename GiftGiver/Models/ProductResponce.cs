@@ -21,5 +21,10 @@
         ///     Цена товара
         /// </summary>
         public string Link { get; set; }
+
+        /// <summary>
+        /// Ошибка
+        /// </summary>
+        public string Error { get; set; }
     }
 }

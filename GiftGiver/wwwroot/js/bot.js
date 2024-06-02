@@ -99,6 +99,11 @@ function getGiftsFromServer() {
                         nameElement.textContent = gift.name;
                         giftColumn.appendChild(nameElement);
 
+                        var nameElement = document.createElement("p");
+                        nameElement.classList.add("count");
+                        nameElement.textContent = gift.count + " ₽";
+                        giftColumn.appendChild(nameElement);
+
                         var addElement = document.createElement("button");
                         addElement.classList.add("add-wish");
                         addElement.id = "add-wish";

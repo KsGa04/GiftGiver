@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using GiftGiver.Models;
-using GiftGiver.Models;
+using Swashbuckle.Swagger;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GiftGiver.Controllers
 {
@@ -19,19 +20,22 @@ namespace GiftGiver.Controllers
             db = giftgiver;
         }
 
+        
         [HttpPost]
         [Route("postauth")]
+        [SwaggerOperation(
+    Summary = "Аутентификация пользователя",
+    Description = "Данный метод позволяет аутентифицировать пользователя по его логину/email и паролю. " +
+                  "Если данные верны, метод возвращает объект SuccessResponse с успешным результатом и выполняет вход пользователя. " +
+                  "Если данные неверны, метод возвращает объект SuccessResponse с неуспешным результатом.",
+    Tags = new[] { "Аутентификация" }
+)]
         public async Task<ActionResult<SuccessResponse>> GetAuth(string loginOrEmail, string password)
         {
             CurrentUser.CurrentClientId = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password select c.ПользовательId).FirstOrDefault();
             Пользователь client = (from c in db.Пользовательs where (c.Email == loginOrEmail || c.Логин == loginOrEmail) && c.Пароль == password select c).FirstOrDefault();
             if (CurrentUser.CurrentClientId > 0)
             {
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, "test"),
-                new Claim(ClaimTypes.Email, "testc@mail.ru")};
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                 var result = new SuccessResponse
                 {
