@@ -1,17 +1,26 @@
 ﻿document.querySelectorAll('.wish-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         var подарокId = this.getAttribute('data-подарокid');
-        fetch(`/Home/ДобавитьЖелаемое?подарокId=${подарокId}`, {
+        fetch('/Home/ДобавитьЖелаемое?подарокId=' + подарокId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Ошибка добавления в желаемое');
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    // Если добавление в желаемое не удалось, проверяем, авторизован ли пользователь
+                    if (data.redirectToAuthorization) {
+                        // Если пользователь не авторизован, переводим его на страницу авторизации
+                        window.location.href = '/Home/Authorization';
+                    } else {
+                        // Если пользователь авторизован, но произошла другая ошибка, выводим ее
+                        console.error('Ошибка добавления в желаемое');
+                    }
+                } else {
+                    // Дополнительная обработка данных при необходимости
                 }
-                // Дополнительная обработка данных при необходимости
             })
             .catch(error => {
                 console.error(error);

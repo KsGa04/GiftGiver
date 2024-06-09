@@ -43,6 +43,15 @@ namespace GiftGiver.Controllers
                 };
                 return result;
             }
+            else if (email == "E-mail" || password == "**********" || fio == "ФИО" || login == "Логин")
+            {
+                result = new SuccessResponse
+                {
+                    Success = false,
+                    Message = "Данные невалидны",
+                };
+                return result;
+            }
             else
             {
                 Пользователь пользователь = new Пользователь()

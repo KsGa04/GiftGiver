@@ -20,7 +20,10 @@
                 </div>
             </div>
             <div>
-                <p style="color:red; font-size: 12px; margin-left: 15%; top:5%; position:relative">@ViewBag.Enter</p>
+                @if (!string.IsNullOrEmpty(ViewBag.Enter))
+                {
+                    <p style="color:red; font-size: 12px; margin-left: 15%; top:5%; position:relative">@ViewBag.Enter</p>
+                }
                 <button class="autho_713" type="submit">Войти</button>
             </div>
             <div>

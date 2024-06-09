@@ -92,7 +92,8 @@ namespace GiftGiver.Controllers
                     Success = false,
                     Message = "Данные неверные",
                 };
-                return ViewBag.Enter = result.Message;
+                ViewBag.Enter = "Данные неверные";
+                return View();
             }
         }
         public IActionResult Registration()
@@ -114,16 +115,6 @@ namespace GiftGiver.Controllers
                 return View();
             }
         }
-
-        public IActionResult Recovery1()
-        {
-            return View();
-        }
-
-        public IActionResult Recovery2()
-        {
-            return View();
-        }
         /// <summary>
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
@@ -135,20 +126,28 @@ namespace GiftGiver.Controllers
         [Authorize]
         public IActionResult PrivateAcc()
         {
-            Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
-            var wishlist = db.Желаемоеs
-        .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
-        .Include(w => w.Подарки)
-        .Select(w => w.Подарки)
-        .ToList();
-
-            // Создаем модель представления и передаем список желаемых подарков
-            var viewModel = new PrivateAccViewModel
+            if (CurrentUser.CurrentClientId != 0)
             {
-                Products = wishlist,
-                User = пользователь
-            };
-            return View(viewModel);
+                Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+                var wishlist = db.Желаемоеs
+            .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
+            .Include(w => w.Подарки)
+            .Select(w => w.Подарки)
+            .ToList();
+
+                // Создаем модель представления и передаем список желаемых подарков
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = wishlist,
+                    User = пользователь
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                return RedirectToAction("Authorization", "Home");
+            }
+            
         }
         [Authorize]
         [HttpPost]
@@ -211,7 +210,6 @@ namespace GiftGiver.Controllers
 
 
         }
-        [Authorize]
         public IActionResult AllGift()
         {
             var result = _allProductsApi.GetAll();
@@ -298,11 +296,18 @@ namespace GiftGiver.Controllers
         /// <summary>
         /// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         /// </summary>
-        
 
+        [Authorize]
         public IActionResult ChatBot()
         {
-            return View();
+            if (CurrentUser.CurrentClientId != 0)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Authorization", "Home");
+            }
         }
 
         public class Gift
@@ -328,7 +333,7 @@ namespace GiftGiver.Controllers
             var recipient = userAnswers["Кому хотите подарить подарок?"];
             var holiday = userAnswers["Какой категории вам необходим подарок?"];
 
-            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) && (x.Получатель.Contains(recipient) || x.Получатель.Contains("Все")))
+            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday))
                                    .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId, Count = x.Цена })
                                    .ToList();
 
@@ -377,24 +382,32 @@ namespace GiftGiver.Controllers
         [Authorize]
         public IActionResult SimilarGifts()
         {
-            // Получаем ID текущего пользователя
-            var currentUserId = CurrentUser.CurrentClientId;
-
-            // Получаем список похожих подарков для текущего пользователя
-            var products = _allProductsApi.GetUsersProductById(currentUserId).Value;
-
-            // Создаем модель
-            var model = new ListSimilar
+            if (CurrentUser.CurrentClientId != 0)
             {
-                Products = products
-            };
+                // Получаем ID текущего пользователя
+                var currentUserId = CurrentUser.CurrentClientId;
 
-            // Возвращаем представление с моделью
-            return View(model);
+                // Получаем список похожих подарков для текущего пользователя
+                var products = _allProductsApi.GetUsersProductById(currentUserId).Value;
+
+                // Создаем модель
+                var model = new ListSimilar
+                {
+                    Products = products
+                };
+
+                // Возвращаем представление с моделью
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Authorization", "Home");
+            }
+
         }
 
         [AllowAnonymous]
-            public IActionResult Privacy()
+        public IActionResult Privacy()
         {
             return View();
         }

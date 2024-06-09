@@ -29,7 +29,7 @@ namespace GiftGiver.Controllers
         [Route("addWBproduct")]
         public async Task<ProductResponce> AddWBProduct(string link)
         {
-            var result = await LoadProduct(link);
+            var result = await LoadProductWB(link);
             string[] segments = link.Split('/');
             string itemId = segments[4];
             decimal cost;
@@ -61,7 +61,7 @@ namespace GiftGiver.Controllers
             return gift;
 
         }
-        protected async Task<JavascriptResponse> ExecuteJavaScript(ChromiumWebBrowser wb1, string s)
+        protected async Task<JavascriptResponse> ExecuteJavaScriptWB(ChromiumWebBrowser wb1, string s)
         {
             try
             {
@@ -73,9 +73,9 @@ namespace GiftGiver.Controllers
             }
         }
 
-        private async Task<(bool Success, string Result)> TryGetStringResult(ChromiumWebBrowser wb1, string script)
+        private async Task<(bool Success, string Result)> TryGetStringResultWB(ChromiumWebBrowser wb1, string script)
         {
-            var shopIdresponse = await ExecuteJavaScript(wb1, script);
+            var shopIdresponse = await ExecuteJavaScriptWB(wb1, script);
             if (shopIdresponse.Success && shopIdresponse.Result is string resultString && !string.IsNullOrEmpty(resultString))
             {
                 return (true, resultString);
@@ -86,7 +86,7 @@ namespace GiftGiver.Controllers
             }
         }
 
-        private async Task<(string, string, byte[])> LoadProduct(string url)
+        private async Task<(string, string, byte[])> LoadProductWB(string url)
         {
             using (var chromium = new ChromiumWebBrowser(string.Empty))
             {
@@ -98,12 +98,12 @@ namespace GiftGiver.Controllers
                 string photoUrl = string.Empty;
                 byte[] photoData = null;
 
-                await chromium.WaitUntill(async browser =>
+                await chromium.WaitUntillWB(async browser =>
                 {
-                    var res = await TryGetStringResult(chromium, browser.GetElementByClassName("product-page__title", 0).GetInnerText());
-                    var res2 = await TryGetStringResult(chromium, browser.GetElementByClassName("price-block__final-price", 0).GetInnerText());
-                    var res3 = await TryGetStringResult(chromium, browser.GetElementByClassName("photo-zoom__preview j-zoom-image", 0).GetAttribute("src"));
-                    
+                    var res = await TryGetStringResultWB(chromium, browser.GetElementByClassNameWB("product-page__title", 0).GetInnerTextWB());
+                    var res2 = await TryGetStringResultWB(chromium, browser.GetElementByClassNameWB("price-block__final-price", 0).GetInnerTextWB());
+                    var res3 = await TryGetStringResultWB(chromium, browser.GetElementByClassNameWB("photo-zoom__preview j-zoom-image", 0).GetAttributeWB("src"));
+
                     productName = res.Result?.Trim();
                     price = res2.Result?.Trim();
                     photoUrl = res3.Result?.Trim();
@@ -130,5 +130,7 @@ namespace GiftGiver.Controllers
             var result = image.ToByteArray();
             return result;
         }
+
+        
     }
 }

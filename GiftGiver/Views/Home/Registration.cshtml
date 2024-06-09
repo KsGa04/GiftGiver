@@ -35,7 +35,10 @@
                 </div>
             </div>
             <div class="div-wrapper">
-                <p style="color:red; font-size: 12px; margin-left: 15%; top:3%; position:fixed">@ViewBag.Enter</p>
+                @if (!string.IsNullOrEmpty(ViewBag.Enter))
+                {
+                    <p class="enter">@ViewBag.Enter</p>
+                }
                 <button class="overlap-2" type="submit">Зарегистрироваться</button>
             </div>
         </div>
