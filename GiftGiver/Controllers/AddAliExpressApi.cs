@@ -2,11 +2,9 @@
 using CefSharp;
 using GiftGiver.Models;
 using ImageMagick;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Common.Browser;
-using Microsoft.EntityFrameworkCore;
 
 namespace GiftGiver.Controllers
 {

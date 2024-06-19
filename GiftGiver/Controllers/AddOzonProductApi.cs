@@ -1,9 +1,7 @@
 ﻿using CefSharp.OffScreen;
 using CefSharp;
 using GiftGiver.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static GiftGiver.Controllers.HomeController;
 using System.Globalization;
 using Common.Browser;
 using ImageMagick;
@@ -24,7 +22,7 @@ namespace GiftGiver.Controllers
         [Route("addOzonproduct")]
         public async Task<ProductResponce> AddOzonProduct(string link)
         {
-            var result = await LoadProduct(link);
+            var result = await LoadProduct(link.Trim());
             int itemId = ExtractProductId(link);
             decimal cost;
             NumberStyles style = NumberStyles.Number | NumberStyles.AllowCurrencySymbol;
@@ -32,26 +30,26 @@ namespace GiftGiver.Controllers
 
             if (decimal.TryParse(result.Item2, style, culture, out cost))
             {
-                //Подарки подарки = new Подарки();
-                //подарки.ПодаркиId = itemId;
-                //подарки.Наименование = result.Item1;
-                //подарки.Цена = cost;
-                //подарки.Ссылка = link;
-                //подарки.Изображение = result.Item3;
-                //db.Подаркиs.Add(подарки);
-                //db.SaveChanges();
-                gift = new ProductResponce
-                {
-                    Name = result.Item1,
-                    Cost = result.Item2,
-                    Image = result.Item3.ToString(),
-                    Link = link
-                };
+                Подарки подарки = new Подарки();
+                подарки.ПодаркиId = itemId;
+                подарки.Наименование = result.Item1;
+                подарки.Цена = cost;
+                подарки.Ссылка = link;
+                подарки.Изображение = result.Item3;
+                db.Подаркиs.Add(подарки);
+                db.SaveChanges();
             }
             else
             {
                 Console.WriteLine("Невозможно преобразовать строку в формат decimal");
             }
+            gift = new ProductResponce
+            {
+                Name = result.Item1,
+                Cost = result.Item2,
+                Image = result.Item3.ToString(),
+                Link = link
+            };
             return gift;
 
         }

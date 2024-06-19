@@ -2,11 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e942a099-7514-485b-944b-f340ff4520a3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/get_all_by_id_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/get_product_by_id.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/get_usersproduct_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/post_authorization_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/post_registration_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Controllers/AddAliExpressApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Controllers/AddAliExpressApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Controllers/AddOzonProductApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Controllers/AddOzonProductApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Controllers/AddProductApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Controllers/AddProductApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/BrowserHelperAli.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/BrowserHelperAli.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/BrowserHelperOzon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/BrowserHelperOzon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/BrowserHelperWB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/BrowserHelperWB.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/ForgotPasswordViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/ResetPasswordViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/SuccessResponce.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/SuccessResponce.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/giftgiverContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/giftgiverContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Администратор.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Администратор.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Желаемое.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Желаемое.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Лента.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Лента.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Подарки.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Подарки.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Пользователь.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Пользователь.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Роли.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Роли.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Models/Статистика.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Models/Статистика.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Views/Home/PrivateAcc.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/../Views/Home/PrivateAcc.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wwwroot/css/authoriz.css" beforeDir="false" afterPath="$PROJECT_DIR$/../wwwroot/css/authoriz.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wwwroot/js/allgift.js" beforeDir="false" afterPath="$PROJECT_DIR$/../wwwroot/js/allgift.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wwwroot/js/bot.js" beforeDir="false" afterPath="$PROJECT_DIR$/../wwwroot/js/bot.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wwwroot/js/private.js" beforeDir="false" afterPath="$PROJECT_DIR$/../wwwroot/js/private.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../wwwroot/js/similar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../wwwroot/js/similar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,26 +35,26 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2hdwiDLXoFBksz6hLIikhfuLpnj" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests in get_all_by_id_test.py.executor": "Run",
-    "Python tests.Python tests in get_product_by_id.py.executor": "Run",
-    "Python tests.Python tests in tests.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests in get_all_by_id_test.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in get_product_by_id.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in tests.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\pc\Desktop\GiftGiver\GiftGiver\tests" />

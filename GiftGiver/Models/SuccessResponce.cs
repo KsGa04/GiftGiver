@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace GiftGiver.Models
+﻿namespace GiftGiver.Models
 {
     public class SuccessResponse
     {

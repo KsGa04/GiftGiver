@@ -15,7 +15,6 @@
                     alert('Товар удален');
                     window.location.href = "/Home/PrivateAcc";
                 }
-                // Дополнительная обработка данных при необходимости
             })
             .catch(error => {
                 console.error(error);

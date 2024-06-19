@@ -59,7 +59,7 @@ function getGiftsFromServer() {
             }
             else {
                 var totalCount = data.totalCount;
-                if (totalDisplayedGifts < totalCount) {
+                if (totalCount != 0) {
                     var textBlock = document.createElement("div");
                     textBlock.className = "message";
 
@@ -129,7 +129,7 @@ function getGiftsFromServer() {
                     var newTheirMessage = createMessageElement("message", userMessage, false);
                     chatMessages.appendChild(newTheirMessage);
                     document.getElementById("more-btn").style.display = "none";
-                    return; // Завершаем выполнение функции, так как все подарки уже выведены
+                    return;
                 }
             }
             scrollToBottom(chatMessages);
@@ -152,12 +152,27 @@ function sendMessage() {
         scrollToBottom(chatMessages);
         return;
     }
+    if (currentQuestionIndex > 0) {
+        botDictionary[questions[currentQuestionIndex - 1]] = userMessage;
+
+        // Проверка категории
+        if (currentQuestionIndex === 1 && !["Игрушка", "Электроника", "Хобби", "Бижутерия", "Набор", "Косметика", "Игры", "Кухня", "Путешествия", "Декор", "Аниме"].includes(userMessage)) {
+            var errorMessage = createMessageElement("message", "Необходима категория: Игрушка, Электроника, Хобби, Бижутерия, Набор, Косметика, Игры, Кухня, Путешествия, Декор, Аниме");
+            chatMessages.appendChild(errorMessage);
+            scrollToBottom(chatMessages);
+            return;
+        }
+        if (currentQuestionIndex === 2 && !["Любой", "Мужчина", "Женщина", "Парень", "Девушка", "Ребенок"].includes(userMessage)) {
+            var errorMessage = createMessageElement("message", "Необходим получатель: Мужчина, Женщина, Парень, Девушка, Ребенок");
+            chatMessages.appendChild(errorMessage);
+            scrollToBottom(chatMessages);
+            return;
+        }
+    }
 
     if (currentQuestionIndex > 0) {
         botDictionary[questions[currentQuestionIndex - 1]] = userMessage;
     }
-
-    // Если все вопросы были заданы, отправляем ответы на сервер и получаем подарки
     if (currentQuestionIndex >= questions.length) {
         getGiftsFromServer();
     } else {
@@ -177,7 +192,7 @@ document.getElementById("more-btn").addEventListener("click", function (e) {
 
 function handleAddWishClick(event) {
     event.preventDefault();
-    var giftId = event.target.dataset.giftId; // Получение giftId из атрибута данных кнопки
+    var giftId = event.target.dataset.giftId;
     fetch(`/Home/ДобавитьЖелаемое?подарокId=${giftId}`, {
         method: 'POST',
         headers: {
@@ -188,10 +203,8 @@ function handleAddWishClick(event) {
             if (!response.ok) {
                 throw new Error('Ошибка добавления в желаемое');
             }
-            // Дополнительная обработка данных при необходимости
         })
         .catch(error => {
             console.error(error);
         });
-    // Далее вы можете выполнить необходимые действия с использованием Id подарка
 }

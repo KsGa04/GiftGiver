@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GiftGiver
+﻿namespace GiftGiver
 {
     public partial class Пользователь
     {

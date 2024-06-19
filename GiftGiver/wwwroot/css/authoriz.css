@@ -290,7 +290,7 @@
         background: rgba(126,107,196,1);
         opacity: 1;
         position: relative;
-        top: 50%;
+        top: 10%;
         left: 50%;
         transform: translate(-50%, -50%);
         border-top-left-radius: 7px;

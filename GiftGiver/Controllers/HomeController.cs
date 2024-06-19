@@ -153,24 +153,44 @@ namespace GiftGiver.Controllers
         [HttpPost]
         public IActionResult PrivateAcc(string mail, string pass, string log, DateTime year)
         {
-            Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
-            пользователь.Email = mail;
-            пользователь.Пароль = pass;
-            пользователь.Логин = log;
-            пользователь.Возраст = year;
-            db.SaveChanges();
-            пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
-            var wishlist = db.Желаемоеs
-        .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
-        .Include(w => w.Подарки)
-        .Select(w => w.Подарки)
-        .ToList();
-            var viewModel = new PrivateAccViewModel
+            if (string.IsNullOrEmpty(mail) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(log))
             {
-                Products = wishlist,
-                User = пользователь
-            };
-            return View(viewModel);
+                ViewBag.Enter = "Не все данные заполнены";
+                Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+                var wishlist = db.Желаемоеs
+            .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
+            .Include(w => w.Подарки)
+            .Select(w => w.Подарки)
+            .ToList();
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = wishlist,
+                    User = пользователь
+                };
+                return View(viewModel);
+            }
+            else
+            {
+                Пользователь пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+                пользователь.Email = mail;
+                пользователь.Пароль = pass;
+                пользователь.Логин = log;
+                пользователь.Возраст = year;
+                db.SaveChanges();
+                пользователь = db.Пользовательs.Where(x => x.ПользовательId == CurrentUser.CurrentClientId).FirstOrDefault();
+                var wishlist = db.Желаемоеs
+            .Where(w => w.ПользовательId == CurrentUser.CurrentClientId)
+            .Include(w => w.Подарки)
+            .Select(w => w.Подарки)
+            .ToList();
+                var viewModel = new PrivateAccViewModel
+                {
+                    Products = wishlist,
+                    User = пользователь
+                };
+                return View(viewModel);
+            }
+           
         }
         [Authorize]
         public IActionResult AdminPanel()
@@ -324,25 +344,54 @@ namespace GiftGiver.Controllers
             public int TotalCount { get; set; }
             public List<Gift> Gifts { get; set; }
         }
+        private static string CapitalizeFirstLetter(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
 
-        private List<int> displayedGiftIds = new List<int>();
+            return char.ToUpper(str[0]) + str.Substring(1);
+        }
+
+
+        private static List<int> displayedGiftIds = new List<int>();
 
         [HttpPost("GetGifts")]
         public ActionResult GetGifts([FromBody] Dictionary<string, string> userAnswers)
         {
-            var recipient = userAnswers["Кому хотите подарить подарок?"];
-            var holiday = userAnswers["Какой категории вам необходим подарок?"];
+            var recipient = CapitalizeFirstLetter(userAnswers["Кому хотите подарить подарок?"]);
+            var holiday = CapitalizeFirstLetter(userAnswers["Какой категории вам необходим подарок?"]);
+            var yearStr = userAnswers["Какого возраста получатель?"];
+            var year = Convert.ToInt32(yearStr);
+            var ages = db.Подаркиs.Select(x => x.МинВозраст).Distinct().OrderByDescending(x => x).ToList();
 
-            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday))
+            // Находим ближайший минимальный возраст
+            var nearestAge = ages.FirstOrDefault(a => a <= year);
+            if (nearestAge == 0)
+            {
+                nearestAge = ages.LastOrDefault();
+            }
+
+            var gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) && x.Получатель.Contains(recipient) && x.МинВозраст == nearestAge)
                                    .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId, Count = x.Цена })
                                    .ToList();
+            while (gifts.Count == 0)
+            {
+                nearestAge = ages.FirstOrDefault(a => a <= nearestAge - 1);
+                if (nearestAge == 0)
+                {
+                    nearestAge = ages.LastOrDefault();
+                }
+                gifts = db.Подаркиs.Where(x => x.Жанр.Contains(holiday) && x.Получатель.Contains(recipient) && x.МинВозраст == nearestAge)
+                                   .Select(x => new Gift { Name = x.Наименование, Link = x.Ссылка, Image = x.Изображение, Id = x.ПодаркиId, Count = x.Цена })
+                                   .ToList();
+            }
 
             var uniqueGifts = gifts.Where(g => !displayedGiftIds.Contains(g.Id)).ToList();
 
+
             if (uniqueGifts.Count > 3)
             {
-                var random = new Random();
-                var selectedGifts = uniqueGifts.OrderBy(x => random.Next()).Take(3).ToList();
+                var selectedGifts = uniqueGifts.Take(3).ToList();
                 var response = new GiftResponse
                 {
                     TotalCount = uniqueGifts.Count,
@@ -360,6 +409,7 @@ namespace GiftGiver.Controllers
                     TotalCount = uniqueGifts.Count,
                     Gifts = uniqueGifts
                 };
+                displayedGiftIds.AddRange(uniqueGifts.Select(g => g.Id));
                 return Ok(response);
             }
         }

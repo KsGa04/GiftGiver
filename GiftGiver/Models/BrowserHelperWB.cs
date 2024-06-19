@@ -1,19 +1,9 @@
 ﻿using CefSharp;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Common.Browser
 {
     public static class ExtensionsWB
     {
-        /// <summary>
-        /// Ждет пока условие не станет истинным
-        /// </summary>
-        /// <param name="browser"></param>
-        /// <param name="func"></param>
-        /// <param name="delay"></param>
-        /// <returns></returns>
         public static async Task WaitUntillWB(this IChromiumWebBrowserBase browser, Func<IChromiumWebBrowserBase, Task<bool>> func, int delay = 100)
         {
             while (true)
@@ -45,9 +35,6 @@ namespace Common.Browser
             Get = getFunc;
             ExecutingBrowser = executingBrowser;
         }
-
-
-        //<span class="visually-hidden">Хэштег</span>
         public string GetInnerTextWB()
         {
             return $@"

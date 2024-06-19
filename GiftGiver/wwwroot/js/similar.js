@@ -11,7 +11,6 @@
                 if (!response.ok) {
                     throw new Error('Ошибка добавления в желаемое');
                 }
-                // Дополнительная обработка данных при необходимости
             })
             .catch(error => {
                 console.error(error);

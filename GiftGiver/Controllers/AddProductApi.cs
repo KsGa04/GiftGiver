@@ -1,14 +1,9 @@
 ﻿using GiftGiver.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml;
-using System;
-using HtmlAgilityPack;
 using CefSharp;
 using CefSharp.OffScreen;
 using Common.Browser;
 using ImageMagick;
-using CefSharp.DevTools.CSS;
 using System.Globalization;
 
 namespace GiftGiver.Controllers
@@ -17,7 +12,6 @@ namespace GiftGiver.Controllers
     [ApiController]
     public class AddProductApi : Controller
     {
-        // GET: HomeController
         private giftgiverContext db = new giftgiverContext();
         public ProductResponce gift;
         public AddProductApi(giftgiverContext giftgiver)
