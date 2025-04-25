@@ -22,7 +22,7 @@ builder.Services.AddTransient<RegApi>();
 builder.Services.AddTransient<AddProductApi>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
-builder.WebHost.UseUrls("http://0.0.0.0:5000");
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
