@@ -3,11 +3,16 @@ using GiftGiver.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using GiftGiver;
 using GiftGiver.Controllers;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container
+builder.Services.AddDbContext<giftgiverContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 builder.Services.AddScoped<AuthApi>();
 builder.Services.AddScoped<giftgiverContext>();
 builder.Services.AddTransient<AllProductsApi>();
@@ -17,6 +22,7 @@ builder.Services.AddTransient<RegApi>();
 builder.Services.AddTransient<AddProductApi>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options => {
